@@ -4,146 +4,146 @@ import numpy as np
 import math
 
 #load the initial data file:
-diabetes01 = pd.read_csv('diabetic_data.csv')
+diabetes = pd.read_csv('./Denisediabetic_data.csv')
 
 #Examine the initial data file:
-diabetes01.head()
+diabetes.head()
 
 In [143]:
 #Rewrite the 24 medication columns to make clearer that they are all comparing the same thing:
 
-Dcolumns = list(diabetes01.columns)
+Dcolumns = list(diabetes.columns)
 for i in range(24, 47):
     Dcolumns[i] = "med_" + Dcolumns[i]
 Dcolumns[48] = "med_any"
 
-diabetes01.columns = Dcolumns
+diabetes.columns = Dcolumns
 
 #age is strictly divided into decades of life. We should make this numeric for now:
-diabetes01['age'].value_counts()
-diabetes01['age'] = diabetes01['age'].replace(['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)', '[50-60)',
+diabetes['age'].value_counts()
+diabetes['age'] = diabetes['age'].replace(['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)', '[50-60)',
                                               '[60-70)', '[70-80)', '[80-90)', '[90-100)'], [1,2,3,4,5,6,7,8,9,10])
 
-'''Some patients show up multiple times in the analysis. This certainly might be relevant,
-but it is covered in other features (num_outpatient, num_inpatient, etc). We should remove encounter_id and patient_nbr.'''
-diabetes01['patient_nbr'].value_counts(10)
-diabetes01 = diabetes01.drop(['encounter_id', 'patient_nbr'], axis=1)
+# '''Some patients show up multiple times in the analysis. This certainly might be relevant,
+# but it is covered in other features (num_outpatient, num_inpatient, etc). We should remove encounter_id and patient_nbr.'''
+diabetes['patient_nbr'].value_counts(10)
+diabetes = diabetes.drop(['encounter_id', 'patient_nbr'], axis=1)
 
-diabetes01.head()
+diabetes.head()
 
 #Race has a ? variable, which we need to keep track of for now (will address/impute later):
-diabetes01['race'].value_counts()
+diabetes['race'].value_counts()
 FeaturesWithMissing = ['race']
 
 #Gender has an Unknown variable also, with only three values. Let's see what these look like:
-diabetes01['gender'].value_counts()
+diabetes['gender'].value_counts()
 
 #Examine in more detail some info from these 3 gender-unknown patients.
-diabetes01[diabetes01['gender']=='Unknown/Invalid']
-print(diabetes01.iloc[30506,])
-print(diabetes01.iloc[75551,])
-print(diabetes01.iloc[82573,])
+diabetes[diabetes['gender']=='Unknown/Invalid']
+print(diabetes.iloc[30506,])
+print(diabetes.iloc[75551,])
+print(diabetes.iloc[82573,])
 
 #These three patients are gender-unknown, race unknown or other. I would recommend removing these values as gender and race seem relevant, and it's only 3 data points, and honestly, if the doctor couldn't fill in gender, I'm not even sure I would believe readmited='NO'.
 
-diabetes01 = diabetes01.drop([30506, 75551, 82573], axis=0)
-diabetes01.index = list(range(len(diabetes01)))
-diabetes01['gender'].value_counts()
+diabetes = diabetes.drop([30506, 75551, 82573], axis=0)
+diabetes.index = list(range(len(diabetes)))
+diabetes['gender'].value_counts()
 
 #97% of data on weight is missing. We can not do anything with this, particularly because it could be non-random. Remove this variable:
-diabetes01 = diabetes01.drop(['weight'], axis=1)
+diabetes = diabetes.drop(['weight'], axis=1)
 
 #Admission types look OK, except that 8 and 6 are the same. We should combine them:
-diabetes01['admission_type_id'].value_counts()
-diabetes01['admission_type_id'] = diabetes01['admission_type_id'].replace([8], [6])
+diabetes['admission_type_id'].value_counts()
+diabetes['admission_type_id'] = diabetes['admission_type_id'].replace([8], [6])
 
-'''These need some adjusting. 11, 19, 20, 21 mean the patient died. Clearly, readmission rates will be 0 here, and this could \
-be written into an algorithm, but for now, they should certainly be rewritten as the same thing.
+# These need some adjusting. 11, 19, 20, 21 mean the patient died. Clearly, readmission rates will be 0 here, and this could \
+# be written into an algorithm, but for now, they should certainly be rewritten as the same thing.
+# 18, 25, and 26 are all the same thing also (unknown).'''
 
-18, 25, and 26 are all the same thing also (unknown).'''
-diabetes01['discharge_disposition_id'].value_counts()
+diabetes['discharge_disposition_id'].value_counts()
 
 #Write to csv to visualize in ggplot2, a far superior visualization tool:
-#diabetes01.to_csv('diabetesmod.csv')
+#diabetes.to_csv('diabetesmod.csv')
 
 
 
 #### visualization
 
-'''After visualization, and careful reading of the descriptions, I would rewrite the 30 discharge categories.'''
+# '''After visualization, and careful reading of the descriptions, I would rewrite the 30 discharge categories.'''
 replacelist = ['home', 'hospital', 'nursing', 'nursing', 'hospice', 'hhealth', 'leftAMA', 'hhealth', 'hospital', 'hospital',
               'died', 'hospital', 'hospice', 'hospice', 'hospital', 'outpatient', 'outpatient', 'unknown', 'died', 'died',
               'died', 'outpatient', 'hospital', 'nursing', 'unknown', 'unknown', 'nursing', 'psych', 'hospital', 'outpatient']
 
-diabetes01['discharge_disposition_id'] = diabetes01['discharge_disposition_id'].replace(list(range(1,31)), replacelist)
+diabetes['discharge_disposition_id'] = diabetes['discharge_disposition_id'].replace(list(range(1,31)), replacelist)
 
-diabetes01['discharge_disposition_id'].value_counts()
+diabetes['discharge_disposition_id'].value_counts()
 
 
 #Rewrite the column as discharge disposition:
-newcollist = list(diabetes01.columns)
+newcollist = list(diabetes.columns)
 newcollist[newcollist.index('discharge_disposition_id')]='discharge_disposition'
-diabetes01.columns = newcollist
+diabetes.columns = newcollist
 
-diabetes01['admission_source_id'].value_counts()
+diabetes['admission_source_id'].value_counts()
 
 #There are no missing values in the "time in hospital"
-print(sum(diabetes01['time_in_hospital'].isna()))
-print(diabetes01['time_in_hospital'].describe())
+print(sum(diabetes['time_in_hospital'].isna()))
+print(diabetes['time_in_hospital'].describe())
 
 
 #For now, we can keep payer_code, although there are a large number of missing values and this feature would not seem to be important
-diabetes01['payer_code'].value_counts()
+diabetes['payer_code'].value_counts()
 
 #This category is completely unwieldy, and we will have to figure out what to do with this too. It has 40% missing values:
-diabetes01['medical_specialty'].value_counts()
+diabetes['medical_specialty'].value_counts()
 
 #Num_lab_procedures is clear
-print(diabetes01['num_lab_procedures'].describe())
-sum(diabetes01['num_lab_procedures'].isna())
+print(diabetes['num_lab_procedures'].describe())
+sum(diabetes['num_lab_procedures'].isna())
 
 
 #Num_procedures is also clear:
-print(diabetes01['num_procedures'].describe())
-sum(diabetes01['num_procedures'].isna())
+print(diabetes['num_procedures'].describe())
+sum(diabetes['num_procedures'].isna())
 
 #Num_medications is also clear:
-print(diabetes01['num_medications'].describe())
-sum(diabetes01['num_medications'].isna())
+print(diabetes['num_medications'].describe())
+sum(diabetes['num_medications'].isna())
 
 #Num_outpatient is also clear:
-print(diabetes01['number_outpatient'].describe())
-sum(diabetes01['number_outpatient'].isna())
+print(diabetes['number_outpatient'].describe())
+sum(diabetes['number_outpatient'].isna())
 
 #Num_emergency is also clear:
-print(diabetes01['number_emergency'].describe())
-sum(diabetes01['number_emergency'].isna())
+print(diabetes['number_emergency'].describe())
+sum(diabetes['number_emergency'].isna())
 
 #Num_inpatient is also clear:
-print(diabetes01['number_inpatient'].describe())
-sum(diabetes01['number_inpatient'].isna())
+print(diabetes['number_inpatient'].describe())
+sum(diabetes['number_inpatient'].isna())
 
 #Num_diagnoses is also clear:
-print(diabetes01['number_diagnoses'].describe())
-sum(diabetes01['number_diagnoses'].isna())
+print(diabetes['number_diagnoses'].describe())
+sum(diabetes['number_diagnoses'].isna())
 
-'''Num_diagnoses and diag_1/diag_2/diag_3 are highly related to each other. If num_diagnoses are 3 or under, diag_3 (and
-diag_2) will be empty. A "primary" diagnosis is essentially what the patient is in there for. Secondary diagnoses are other
-things the patient has. I would recommend combining diag_1 thru diag_3 together'''
+# '''Num_diagnoses and diag_1/diag_2/diag_3 are highly related to each other. If num_diagnoses are 3 or under, diag_3 (and
+# diag_2) will be empty. A "primary" diagnosis is essentially what the patient is in there for. Secondary diagnoses are other
+# things the patient has. I would recommend combining diag_1 thru diag_3 together'''
 
 #Max glucose in serum is present, though many points were not measured. We should rewrite these as "NotTaken"
-diabetes01['max_glu_serum'].value_counts()
-diabetes01['max_glu_serum'] = diabetes01['max_glu_serum'].replace(['None'], ['NotTaken'])
+diabetes['max_glu_serum'].value_counts()
+diabetes['max_glu_serum'] = diabetes['max_glu_serum'].replace(['None'], ['NotTaken'])
 
 #Same story for A1C measurement
-diabetes01['A1Cresult'].value_counts()
-diabetes01['A1Cresult'] = diabetes01['A1Cresult'].replace(['None'], ['NotTaken'])
+diabetes['A1Cresult'].value_counts()
+diabetes['A1Cresult'] = diabetes['A1Cresult'].replace(['None'], ['NotTaken'])
 
 #Write a function to rewrite the disease codes according to a modified version of the publication:
 def convertdiseases(min, max, newname):
-    d1 = diabetes01['diag_1'].tolist()
-    d2 = diabetes01['diag_2'].tolist()
-    d3 = diabetes01['diag_3'].tolist()
+    d1 = diabetes['diag_1'].tolist()
+    d2 = diabetes['diag_2'].tolist()
+    d3 = diabetes['diag_3'].tolist()
 
     for i in range(len(d1)):
         try:
@@ -162,14 +162,14 @@ def convertdiseases(min, max, newname):
         except:
             pass
 
-    diabetes01['diag_1'] = pd.Series(d1)
-    diabetes01['diag_2'] = pd.Series(d2)
-    diabetes01['diag_3'] = pd.Series(d3)
+    diabetes['diag_1'] = pd.Series(d1)
+    diabetes['diag_2'] = pd.Series(d2)
+    diabetes['diag_3'] = pd.Series(d3)
 
 convertdiseases(340, 459, 'circulatory')
 
 #That worked pretty well. Let's do this for all additional values and combinations:
-diabetes01['diag_1'].value_counts()
+diabetes['diag_1'].value_counts()
 
 convertdiseases(785, 786, 'circulatory')
 convertdiseases(745, 748, 'circulatory')
@@ -200,23 +200,23 @@ convertdiseases(790, 800, 'other')
 convertdiseases(743, 745, 'other')
 convertdiseases(757, 760, 'other')
 
-'''This successfully converted our targets. Now we still have things to convert. All patients have diabetes, so the 250
-classifications are not important insofar as they diagnose diabetes. We can, however, glean addition diabetic info from the
-decimal codes, where they exist. They would need to go to their own categories, however.'''
+# '''This successfully converted our targets. Now we still have things to convert. All patients have diabetes, so the 250
+# classifications are not important insofar as they diagnose diabetes. We can, however, glean addition diabetic info from the
+# decimal codes, where they exist. They would need to go to their own categories, however.'''
 
-'''First, lets get rid of the EV codes, which the publication refers to as injuries or additional diagnosic information'''
-diabetes01['diag_1'].value_counts()
+# '''First, lets get rid of the EV codes, which the publication refers to as injuries or additional diagnosic information'''
+diabetes['diag_1'].value_counts()
 
 
-diabetes01['diag_1'] = diabetes01['diag_1'].replace('V[0-9]+', 'injury', regex=True)
-diabetes01['diag_1'] = diabetes01['diag_1'].replace('E[0-9]+', 'injury', regex=True)
-diabetes01['diag_2'] = diabetes01['diag_2'].replace('V[0-9]+', 'injury', regex=True)
-diabetes01['diag_2'] = diabetes01['diag_2'].replace('E[0-9]+', 'injury', regex=True)
-diabetes01['diag_3'] = diabetes01['diag_3'].replace('V[0-9]+', 'injury', regex=True)
-diabetes01['diag_3'] = diabetes01['diag_3'].replace('E[0-9]+', 'injury', regex=True)
+diabetes['diag_1'] = diabetes['diag_1'].replace('V[0-9]+', 'injury', regex=True)
+diabetes['diag_1'] = diabetes['diag_1'].replace('E[0-9]+', 'injury', regex=True)
+diabetes['diag_2'] = diabetes['diag_2'].replace('V[0-9]+', 'injury', regex=True)
+diabetes['diag_2'] = diabetes['diag_2'].replace('E[0-9]+', 'injury', regex=True)
+diabetes['diag_3'] = diabetes['diag_3'].replace('V[0-9]+', 'injury', regex=True)
+diabetes['diag_3'] = diabetes['diag_3'].replace('E[0-9]+', 'injury', regex=True)
 
 #This is looking better, but apprently, some ICD-9 codes weren't covered in our initial conversion:
-diabetes01['diag_1'].value_counts()
+diabetes['diag_1'].value_counts()
 
 convertdiseases(240, 250, 'metabolic')
 convertdiseases(251, 280, 'metabolic')
@@ -224,25 +224,21 @@ convertdiseases(680, 710, 'skin')
 convertdiseases(782, 783, 'skin')
 
 #All that is missing now is 783, 789
-diabetes01['diag_1'].value_counts()
+diabetes['diag_1'].value_counts()
 
 convertdiseases(789, 790, 'other')
 convertdiseases(783, 784, 'metabolic')
 
-'''We now have all values, other than ? and the diabetes codes, as a category. Let's create a new column with additional
-diabetes info (from the 250 codes), then revert all 250's and ? to 'NoDisease', a value which will go away after diag1, 2, 3
-combination.'''
-Out[182]:
-"We now have all values, other than ? and the diabetes codes, as a category.
-Let's create a new column with additional \ndiabetes info (from the 250 codes),
-then revert all 250's and ? to 'NoDisease', a value which will go away after diag1, 2, 3\ncombination."
+# '''We now have all values, other than ? and the diabetes codes, as a category. Let's create a new column with additional
+# diabetes info (from the 250 codes), then revert all 250's and ? to 'NoDisease', a value which will go away after diag1, 2, 3
+# combination.'''
 
 #We can create 4 rows (eventually condensed to 2): diabetes_feature (1-3) and Type (1 or 2):
 
 #Write a function to migrate data from diabetes codes to new columns, then revert them to "NoDisease":
-'''This function returns a modified version of our DF, and creates four rows. diabfeature1, 2, 3 which are extra diabetic
-features of the patient, and diabtype which is a report of either Type1, Type2, or (typically) unknown for the patient,
-based on ICD code'''
+# '''This function returns a modified version of our DF, and creates four rows. diabfeature1, 2, 3 which are extra diabetic
+# features of the patient, and diabtype which is a report of either Type1, Type2, or (typically) unknown for the patient,
+# based on ICD code'''
 def convertdiabetescodes(df):
     df2 = df.copy()
     d1 = list(df2['diag_1'])
@@ -383,9 +379,9 @@ def convertdiabetescodes(df):
 #We can create 4 rows (eventually condensed to 2): diabetes_feature (1-3) and Type (1 or 2):
 
 #Write a function to migrate data from diabetes codes to new columns, then revert them to "NoDisease":
-'''This function returns a modified version of our DF, and creates four rows. diabfeature1, 2, 3 which are extra diabetic
-features of the patient, and diabtype which is a report of either Type1, Type2, or (typically) unknown for the patient,
-based on ICD code'''
+# '''This function returns a modified version of our DF, and creates four rows. diabfeature1, 2, 3 which are extra diabetic
+# features of the patient, and diabtype which is a report of either Type1, Type2, or (typically) unknown for the patient,
+# based on ICD code'''
 def convertdiabetescodes(df):
     df2 = df.copy()
     d1 = list(df2['diag_1'])
@@ -523,8 +519,8 @@ def convertdiabetescodes(df):
 
     return df2
 
-#Now, let's update diabetes01 to diabetes02 with these extra columns:
-diabetes02 = convertdiabetescodes(diabetes01)
+#Now, let's update diabetes to diabetes02 with these extra columns:
+diabetes02 = convertdiabetescodes(diabetes)
 
 #Now, we can see that we have Type1/2 information for some of the patients.
 diabetes02['diabtype'].value_counts()
@@ -534,23 +530,23 @@ diabetes02['diabfeature1'].value_counts()
 
 #Save file and reopen:
 
-#diabetes02.to_csv('diabetes02.csv')
+diabetes02.to_csv('diabetes02.csv')
 diabetes02 = pd.read_csv('diabetes02.csv', index_col=0)
 
 #Let's see if we can impute additional columns for Type1/Type2 based on what we have here
-diabetes00 = pd.read_csv('diabetic_data.csv')
+diabetes00 = pd.read_csv('./Denise/diabetic_data.csv')
 
 diabetes00['diabtype'] = diabetes02['diabtype']
 
-'''A visual inspection of some random samples of this data is discouraging, and shows differening type status (1 vs 2) for the same patient in different encounters. Based on this fact, and the low prevalence of this information to begin with, we should not include diabtype in our analysis or try to impute it within the same patient.'''
+# '''A visual inspection of some random samples of this data is discouraging, and shows differening type status (1 vs 2) for the same patient in different encounters. Based on this fact, and the low prevalence of this information to begin with, we should not include diabtype in our analysis or try to impute it within the same patient.'''
 diabetes00[diabetes00['diabtype']!='Unknown'].sort_values('patient_nbr')[['patient_nbr', 'diabtype']].head(100)
 diabetes00[diabetes00['diabtype']!='Unknown'].sort_values('patient_nbr')[['patient_nbr', 'diabtype']].iloc[300:400,]
 
 #Drop diabtype from this dataframe:
 diabetes02 = diabetes02.drop('diabtype', axis=1)
-In [193]:
-'''We also need to get rid of diabetes from the diag list (we know these patients have diabetes.) Anything still numeric (or ?)
-in the diag_ features should be changed to "Nothing"'''
+
+# '''We also need to get rid of diabetes from the diag list (we know these patients have diabetes.) Anything still numeric (or ?)
+# in the diag_ features should be changed to "Nothing"'''
 
 diabetes02['diag_1'] = diabetes02['diag_1'].replace('?', 'Nothing').astype('str')
 diabetes02['diag_2'] = diabetes02['diag_2'].replace('?', 'Nothing').astype('str')
@@ -662,21 +658,11 @@ def createcombineddummiesF(df, c1, c2, c3=None, c4=None, c5=None, prefix=''):
 
 #Now do a similar thing for diagfeature:
 featureDummy = createcombineddummiesF(diabetes02, 'diabfeature1', 'diabfeature2', 'diabfeature3', prefix='diabfeat')
-In [202]:
+
 #Out of curiosity, let's see how many values are in each columns:
 np.sum(featureDummy)
-Out[202]:
-diabfeat_circulatory        1142
-diabfeat_coma                 86
-diabfeat_hyperosmolarity     396
-diabfeat_ketoacidosis       2589
-diabfeat_neurologic         3158
-diabfeat_ophthalmic          577
-diabfeat_other              3883
-diabfeat_renal              1828
-dtype: int64
 
-'''This is a decent amount of information which could possibly help with predicting readmission rates (not sure about coma)'''
+# '''This is a decent amount of information which could possibly help with predicting readmission rates (not sure about coma)'''
 
 diabetes03 = diabetes03.drop(['diabfeature1', 'diabfeature2', 'diabfeature3'], axis=1)
 diabetes03 = pd.concat([diabetes03, featureDummy], axis=1)
@@ -730,7 +716,7 @@ MedColumns = list(diabetes03.columns[16:32])
 
 OrdMedDummyColumns = ['race', 'gender', 'discharge_disposition', 'max_glu_serum', 'A1Cresult', 'change', 'med_any',
                      'admission_type_id', 'admission_source_id']
-AllDummyColumns = OrdMedDummyColumns.copy()
+AllDummyColumns = OrdMedDummyColumns
 AllDummyColumns.extend(MedColumns)
 
 #Make all dummy DF

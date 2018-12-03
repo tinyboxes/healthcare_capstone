@@ -1,7 +1,12 @@
-Anisha Luthra
+Collaborators:
 
-Chaoran Chen
+- Adrian Gillerman
+- Anisha Luthra
+- Chaoran Chen
+- Dave Corrigan
+- Denise Sison
+- Devon Blumenthal
+- Tim Waterman
+- Vivian Liu
 
-Dave Corrigan
-
-Denise Sison
+NYC Data Science Academy Cohort 15
