@@ -56,11 +56,22 @@ dashboardPage(
     tabItem("eda",
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
-                            print("Stuff 1")),
+                            fluidRow(box(width = 12,
+                                         plotOutput("outcome")
+                            )
+                            )),
+                   
                    tabPanel(title = "A1C level",
-                            print("Stuff 2")),
+                            fluidRow(box(width = 12,
+                                         plotOutput("A1C")
+                            )
+                            )),
+                   
                    tabPanel(title = "Diagnoses",
-                            print("Stuff 3")),
+                            fluidRow(box(width = 12,
+                                         plotOutput("diagnoses")
+                            )
+                            )),
                    
                    tabPanel(title = "Days in hospital",
                             fluidRow(box(width = 12,

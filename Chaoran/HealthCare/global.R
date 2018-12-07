@@ -10,6 +10,20 @@ df<- read.csv(file = "./DiabetesTrainTestForShiny.csv")
 df_train<-df%>%filter(IsTrain==1) # for EDA
 df_test<-df%>%filter(IsTrain==0) # no prediction result in this df
 
+#graph for outcome  in EDA
+outcome <- group_by(df_train, readmitted) %>%
+  summarise(count=n())%>%
+  ggplot(aes(x=readmitted,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge')
+
+#graph for A1C  in EDA
+A1C <- group_by(df_train, A1Cresult, readmitted) %>%
+  summarise(count=n())%>%
+  ggplot(aes(x=A1Cresult,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge')
+
+#graph for diagnoses  in EDA
+diagnoses <- group_by(df_train, number_diagnoses, readmitted) %>%
+  summarise(count=n())%>%
+  ggplot(aes(x=number_diagnoses,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge')
 
 #graph for days in hospital  in EDA
 days_hospital<- group_by(df_train,time_in_hospital,readmitted)%>%
