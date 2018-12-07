@@ -22,5 +22,21 @@ shinyServer(function(input, output) {
     hist(x, breaks = bins, col = 'darkgray', border = 'white')
     
   })
+
+  #days in hospital-EDA  
+  output$days_hospital_hist<- renderPlot({
+    days_hospital
+  })
+  
+  # num of lab-EDA
+  output$num_lab_hist<- renderPlot({
+    num_lab
+  })
+  
+  # num of lab-EDA
+  output$num_meds_hist<- renderPlot({
+    num_meds
+  })
+  
   
 })

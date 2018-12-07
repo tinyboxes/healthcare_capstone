@@ -1,7 +1,4 @@
-library(shiny)
-library(tidyverse)
-library(shinydashboard)
-library(DT)
+
 ##Establish that this is a dashboard page
 dashboardPage(
   dashboardHeader(title = "HealthCare"), ##Naming the entire page
@@ -34,20 +31,61 @@ dashboardPage(
   ##Creating The Body of the Page
   dashboardBody(tabItems( ##Establishing That I want to work on the tab items
     tabItem("about", ##Calling the tab I wish to work on
-            print("This where we will talk about the project")), ##What will go inside the tab
+            box(h1('Predicting Hospital Readmission',align='center'),background='light-blue',width=24),
+            box(background='purple', width=24,
+                p('about'),
+                p('about'),
+                p('about'))
+                
+              
+            ), ##What will go inside the tab
     tabItem("background",
-            print("This is where we will put Tim/Adrian's thoughts for their background research"),
-            br(),
-            print("Talk about the dataset"),
-            br(),
-            print("talk about the paper")),
+            box(h1('Background Research1',align='center'),background='light-blue',width=24),
+            box(background='purple', width=24,
+                p('about'),
+                p('about'),
+                p('about')
+            ),
+            box(h1('Background Research2',align='center'),background='light-blue',width=24),
+            box(background='purple', width=24,
+                p('about'),
+                p('about'),
+                p('about')
+            )
+    ),
     tabItem("eda",
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
                             print("Stuff 1")),
+                   tabPanel(title = "A1C level",
+                            print("Stuff 2")),
+                   tabPanel(title = "Diagnoses",
+                            print("Stuff 3")),
+                   
+                   tabPanel(title = "Days in hospital",
+                            fluidRow(box(width = 12,
+                            plotOutput("days_hospital_hist")
+                            )
+                            )),
+                   
+                   tabPanel(title = "Num of labs",
+                            fluidRow(box(width = 12,
+                              plotOutput("num_lab_hist")
+                            )
+                            )),
+                   
+                   tabPanel(title = "Num of meds",
+                            fluidRow(box(width = 12,
+                              plotOutput("num_meds_hist")
+                            )
+                            )),
                    tabPanel(title = "Age Groups",
-                            print("Stuff 2"))),
-            print("EDA graphs, tabs?")),
+                            print("Stuff 7")),
+                   tabPanel(title = "Metfomin&Insulin",
+                            print("Stuff 8")),
+                   tabPanel(title = "Race",
+                            print("Stuff 9")))
+            ),
     tabItem("results",
             tabBox(id = "resultstabs",width = 6,
                    tabPanel(title = "ROC Curve",
