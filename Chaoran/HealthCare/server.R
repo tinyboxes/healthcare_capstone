@@ -24,8 +24,18 @@ shinyServer(function(input, output) {
   })
 
   #days in hospital-EDA  
-  output$dayinhos_hist<- renderPlot({
+  output$days_hospital_hist<- renderPlot({
     days_hospital
+  })
+  
+  # num of lab-EDA
+  output$num_lab_hist<- renderPlot({
+    num_lab
+  })
+  
+  # num of lab-EDA
+  output$num_meds_hist<- renderPlot({
+    num_meds
   })
   
   
