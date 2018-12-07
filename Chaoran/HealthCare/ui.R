@@ -31,23 +31,41 @@ dashboardPage(
   ##Creating The Body of the Page
   dashboardBody(tabItems( ##Establishing That I want to work on the tab items
     tabItem("about", ##Calling the tab I wish to work on
-            box(h1('Predicting Hospital Readmission',align='center'),background='light-blue',width=24),
-            box(background='purple', width=24,
-                p('about'),
-                p('about'),
-                p('about'))
-                
-              
-            ), ##What will go inside the tab
+            box(h1('Predicting Hospital Readmission',align='center'),background='purple',width=24),
+            box(background='light-blue', width=24,
+                h3('About the Company'),
+                p('Argos Health maximizes claim reimbursement for hospitals, 
+                  health systems and physician groups by billing & resolving complex claims.'),
+                br(),
+                h3('Project Rationale'),
+                p('The purpose of this project is to develop a predictive model which will help hospitals 
+                  reduce their readmission rates among diabetic patients.'),
+                p('The hospital has a new 2019 goal of reducing hospital readmission rates. Both the hospital finance and clinical 
+                   care teams are interested in how the data science team may help these departments reach this goal.'),
+                br(),
+                h3('Technical Approach'),
+                p('Develop a model which predicts whether a patient will be readmitted in <30 days. 
+                  A new diabetic readmission reduction program intervention will use this model in 
+                  order to target patients at high risk for readmission. Models will be evaluated on AUC and False Positive Rates.'),
+                br(),
+                h3('Data'),
+                print('Click '),
+                a('here',style="color:navy" , href='https://www.hindawi.com/journals/bmri/2014/781670/'),
+                print(' for link to dataset.'),
+                p('Beata Strack, Jonathan P. DeShazo, Chris Gennings, Juan L. Olmo, Sebastian Ventura,Krzysztof J. Cios, and John N. Clore,
+                  "Impact of HbA1c Measurement on Hospital Readmission Rates: Analysis of 70,000 Clinical Database Patient Records," 
+                  BioMed Research International, vol. 2014, Article ID 781670, 11 pages, 2014.')
+                )), 
+    
     tabItem("background",
-            box(h1('Background Research1',align='center'),background='light-blue',width=24),
-            box(background='purple', width=24,
+            box(h1('Background Research1',align='center'),background='purple',width=24),
+            box(background='light-blue', width=24,
                 p('about'),
                 p('about'),
                 p('about')
             ),
-            box(h1('Background Research2',align='center'),background='light-blue',width=24),
-            box(background='purple', width=24,
+            box(h1('Background Research2',align='center'),background='purple',width=24),
+            box(background='light-blue', width=24,
                 p('about'),
                 p('about'),
                 p('about')
@@ -117,13 +135,28 @@ dashboardPage(
                    tabPanel(title = "User Options",
                             print("Put drop-down tabs for users to chose"))),
             print("One pie chart, bar chart, tabs for variable importance, options")),
-    tabItem("patients",
-            tabBox(id = "predicttabs",width = 6,
-                   tabPanel(title = "Patient Demographics",
-                            print("Patient ID, age, race, gender")),
-                   tabPanel(title = "Test Results",
-                            print("Test values"))),
+    
+    tabItem("patients",fluidRow(column(7, dataTableOutput("table")),
+                                column(5,tabBox(id = "predicttabs",width = 12,
+                                                tabPanel(title = "Patient Demographics",
+                                                         h4("Prediction:"),
+                                                         textOutput("dp_c"),
+                                                         h4("Encounter ID:"),
+                                                         textOutput("de_i"),
+                                                         h4("Patient Number:"),
+                                                         textOutput("dp_n"),
+                                                         h4("Age Bracket:"),
+                                                         textOutput("d_a"),
+                                                         h4("Race:"),
+                                                         textOutput("d_r"),
+                                                         h4("Gender:"),
+                                                         textOutput("d_g")),
+                                                tabPanel(title = "Aministrative Information",
+                                                         print("WOOT")),
+                                                tabPanel(title = "Test Results",
+                                                         print("Test values"))))),
             print("Have a clickable table, tabs for patient information")),
+    
     tabItem("cost",
             print("Back to Adrian/Tim for their cost information"))
     
