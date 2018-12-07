@@ -24,34 +24,53 @@ shinyServer(function(input, output) {
   })
   
   #outcome-EDA  
-  output$outcome<- renderPlot({
+  output$outcome<- renderPlotly({
     outcome
   })
   
   #A1C-EDA 
-  output$A1C<- renderPlot({
+  output$A1C<- renderPlotly({
     A1C
   })
   
   #diagnoses-EDA
-  output$diagnoses<- renderPlot({
+  output$diagnoses<- renderPlotly({
     diagnoses
   })
 
   #days in hospital-EDA  
-  output$days_hospital_hist<- renderPlot({
+  output$days_hospital_hist<- renderPlotly({
     days_hospital
   })
   
   # num of lab-EDA
-  output$num_lab_hist<- renderPlot({
+  output$num_lab_hist<- renderPlotly({
     num_lab
   })
   
   # num of lab-EDA
-  output$num_meds_hist<- renderPlot({
+  output$num_meds_hist<- renderPlotly({
     num_meds
   })
   
+  # age-EDA
+  output$age_hist<- renderPlotly({
+    age
+  })
+  
+  #metformin-EDA
+  output$metformin_hist<- renderPlotly({
+    metformin
+  })
+  
+  #insulin-EDA
+  output$insulin_hist<- renderPlotly({
+    insulin
+  })
+  
+  #race-EDA
+  output$race_hist<- renderPlotly({
+    race
+  })
   
 })

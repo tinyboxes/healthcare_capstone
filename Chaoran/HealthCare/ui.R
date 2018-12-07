@@ -57,46 +57,52 @@ dashboardPage(
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
                             fluidRow(box(width = 12,
-                                         plotOutput("outcome")
-                            )
-                            )),
+                                         plotlyOutput("outcome")
+                            ))),
                    
                    tabPanel(title = "A1C level",
                             fluidRow(box(width = 12,
-                                         plotOutput("A1C")
-                            )
-                            )),
+                                         plotlyOutput("A1C")
+                            ))),
                    
                    tabPanel(title = "Diagnoses",
                             fluidRow(box(width = 12,
-                                         plotOutput("diagnoses")
-                            )
-                            )),
+                                         plotlyOutput("diagnoses")
+                            ))),
                    
                    tabPanel(title = "Days in hospital",
                             fluidRow(box(width = 12,
-                            plotOutput("days_hospital_hist")
-                            )
-                            )),
+                            plotlyOutput("days_hospital_hist")
+                            ))),
                    
                    tabPanel(title = "Num of labs",
                             fluidRow(box(width = 12,
-                              plotOutput("num_lab_hist")
-                            )
-                            )),
+                              plotlyOutput("num_lab_hist")
+                            ))),
                    
                    tabPanel(title = "Num of meds",
                             fluidRow(box(width = 12,
-                              plotOutput("num_meds_hist")
-                            )
-                            )),
+                              plotlyOutput("num_meds_hist")
+                            ))),
+                   
                    tabPanel(title = "Age Groups",
-                            print("Stuff 7")),
+                            fluidRow(box(width = 12,
+                                         plotlyOutput("age_hist")
+                                         ))),
+                   
                    tabPanel(title = "Metfomin&Insulin",
-                            print("Stuff 8")),
+                            fluidRow(box(width = 6,
+                                         plotlyOutput("metformin_hist")
+                                         ),
+                                     box(width = 6,
+                                         plotlyOutput("insulin_hist")
+                                     ))),
+                   
                    tabPanel(title = "Race",
-                            print("Stuff 9")))
-            ),
+                            fluidRow(box(width = 12,
+                                         plotlyOutput("race_hist")
+                                         )))
+            )),
     tabItem("results",
             tabBox(id = "resultstabs",width = 6,
                    tabPanel(title = "ROC Curve",
