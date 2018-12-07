@@ -63,15 +63,22 @@ dashboardPage(
                             print("Stuff 3")),
                    
                    tabPanel(title = "Days in hospital",
-                            fluidRow(box(
-                            plotOutput("dayinhos_hist")
+                            fluidRow(box(width = 12,
+                            plotOutput("days_hospital_hist")
                             )
                             )),
                    
                    tabPanel(title = "Num of labs",
-                            print("Stuff 5")),
+                            fluidRow(box(width = 12,
+                              plotOutput("num_lab_hist")
+                            )
+                            )),
+                   
                    tabPanel(title = "Num of meds",
-                            print("Stuff 6")),
+                            fluidRow(box(width = 12,
+                              plotOutput("num_meds_hist")
+                            )
+                            )),
                    tabPanel(title = "Age Groups",
                             print("Stuff 7")),
                    tabPanel(title = "Metfomin&Insulin",
