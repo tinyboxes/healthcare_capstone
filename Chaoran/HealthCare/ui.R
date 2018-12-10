@@ -170,12 +170,20 @@ dashboardPage(
             )),
     
     tabItem("predictvis",
-            tabBox(id = "predicttabs",width = 6,
-                   tabPanel(title = "Variagle Inportance",
-                            print("Show a variable importance graph")),
+            tabBox(id = "predicttabs", width= 8,
+                   tabPanel(title = "Variable Importance",
+                            plotlyOutput("importance_bar"),
+                            helpText('Above are the top 20 variables contributing to patient readmission.')),
+                   
                    tabPanel(title = "User Options",
-                            print("Put drop-down tabs for users to chose"))),
-            print("One pie chart, bar chart, tabs for variable importance, options")),
+                            plotOutput("importance_pie"))),
+            box(width=4,
+                helpText('Select features from the drop down box below.'),
+                selectInput("feature",
+                            "Features: ", choices = feat_imp$Feature,
+                            multiple = TRUE, selected = 'age')
+            )
+    ),
     
     tabItem("patients",fluidRow(column(7, dataTableOutput("table")),
                                 column(5,tabBox(id = "predicttabs",width = 12,
