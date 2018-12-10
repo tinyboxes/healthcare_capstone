@@ -58,19 +58,44 @@ dashboardPage(
                 )), 
     
     tabItem("background",
-            box(h1('Background Research1',align='center'),background='purple',width=24),
+            box(h2('Overview and Public Health Perspective',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p("Diabetes Mellitus is a prominent and growing public health concern that costs the United States economy hundreds of billions 
+                  of dollars each year. Hospital readmissions among diabetes patients are a prominent component behind these high costs."),
+                p("Type 1 and 2 diabetes both relate to an inability of the body to manage blood sugar levels. Type 2 is much more common, and 
+                  coincides highly with an unhealthy lifestyle."),
+                p("Both types of diabetes can be successfully managed through implementing a \"Diabetes Management Program\", which coordinates the communication,
+                  logistics, and education about the disease between medical staff, the patient, and the patient's support network."),
+                p("A predictive tool capable of classifying diabetic patients with a \"high-risk\" of being readmitted to a hospital within 30 days of discharge
+                  enables the identification of patients that would benefit most from a diabetes management program. This enables the allocation of resources
+                  in a manner that optimally reduces costs, improves health outcomes, and saves lives.")
             ),
-            box(h1('Background Research2',align='center'),background='purple',width=24),
+            box(h2('Additional Research',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p('Further research was conducted to estimate values for additional variables that were not available within the dataset. These variables
+                  proved necessary to transfer model predictions into the tangible financial and clinical recommendations necessary for business purposes.
+                  Examples of these variables include:'),
+                p('- the cost of hospital readmission'),
+                p('- the cost of a diabetes management program'),
+                p('- the success rate of a diabetes management program at preventing a 30-day readmission'),
+                p('Other studies that aimed to predict the rate of hospital readmission across patients with diabetes and/or similar
+                  chronic conditions were also reviewed. These studies identified additional variables that have been shown to be useful predictors 
+                  of readmission, but were unfortunately not available within the dataset.'),
+                p("Examples of additional desirable socioeconomic information might include a patient's:"),
+                p('- zip code'),
+                p('- personal support network'),
+                p('- income level'),
+                p('- education level'),
+                p("Examples of additional desirable health information might include a patient's:"),
+                p('- weight'),
+                p('- BMI'),
+                p('- blood pressure levels'),
+                p('- smoking habits'),
+                p('- access to regular primary care')
+                
             )
     ),
+    
     tabItem("eda",
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
@@ -170,19 +195,45 @@ dashboardPage(
             )),
     
     tabItem("predictvis",
-            tabBox(id = "predicttabs", width= 8,
-                   tabPanel(title = "Variable Importance",
-                            plotlyOutput("importance_bar"),
-                            helpText('Above are the top 20 variables contributing to patient readmission.')),
-                   
-                   tabPanel(title = "User Options",
-                            plotOutput("importance_pie"))),
-            box(width=4,
-                helpText('Select features from the drop down box below.'),
-                selectInput("feature",
-                            "Features: ", choices = feat_imp$Feature,
-                            multiple = TRUE, selected = 'age')
-            )
+            fluidRow(
+              box(id = "readmissioPie", width = 6,
+                  plotOutput("readmission_pie"),
+                  plotOutput("importance_pie")),
+              tabBox(id = "predicttabs", width = 6,
+                     tabPanel(title = "Variable Importance",
+                              plotlyOutput("importance_bar"),
+                              helpText('Above are the top 20 variables contributing to patient readmission.')),
+                     tabPanel(title = "Readmission Variables",
+                              helpText('Select features from the drop down box below.'),
+                              selectInput("feature",
+                                          "Features: ", choices = feat_imp$Feature,
+                                          multiple = TRUE, selected = c('age', 'time_in_hospital', 'num_medications'))),
+                     tabPanel(title = "User Options",
+                              helpText("Select variables from the drop down boxes below."),
+                              selectInput("gender",
+                                          "Gender:", choices = unique(df_test$gender), selected = 'Male'),
+                              selectInput("race",
+                                          "Race:", choices = unique(df_test$race), selected = 'African American'),
+                              selectInput("age",
+                                          "Age Group:", choices = unique(df_test$age), selected = '30 - 40'),
+                              
+                              sliderInput("time",
+                                          "Time in Hospital (days):", min = 1,
+                                          max = 14, value = 1),
+                              # sliderInput("numLabs",
+                              #             "Nummber of Lab Procedures:", min = 0,
+                              #             max = 120, value = 44),
+                              # didn't include, needed to simplify filter to get enough data points
+                              sliderInput("numPro",
+                                          "Numer of Medical Procedures:", min = 0,
+                                          max = 6, value = 1)
+                              # ,
+                              # sliderInput("numMeds",
+                              #             "Number of Medications:", min = 0,
+                              #             max = 69, value = 15)
+                              # didn't include, needed to simplify filter to get enough data points
+                     )
+              ))
     ),
     
     tabItem("patients",fluidRow(column(7, dataTableOutput("table")),
