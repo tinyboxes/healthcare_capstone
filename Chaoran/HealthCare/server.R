@@ -100,4 +100,15 @@ shinyServer(function(input, output) {
     race
   })
   
+  #aucplot
+  output$aucplot_plot<-renderPlot({
+    plot(modelroc, print.auc=TRUE, auc.polygon=TRUE,
+         grid=c(0.1, 0.2), grid.col=c("green", "red"),
+         max.auc.polygon=TRUE, auc.polygon.col="skyblue", print.thres=TRUE)
+  })
+  
+  output$cMatrix_text<-renderPrint({
+    cMatrix
+  })
+  
 })

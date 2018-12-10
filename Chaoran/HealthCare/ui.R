@@ -121,13 +121,54 @@ dashboardPage(
                                          plotlyOutput("race_hist")
                                          )))
             )),
+    
     tabItem("results",
-            tabBox(id = "resultstabs",width = 6,
-                   tabPanel(title = "ROC Curve",
-                            print("Have a graph of the ROC curve and the AUC")),
-                   tabPanel(title = "Definitions",
-                            print("Define specificity, fpc, etc."))),
-            print("Include Confusion matrix, specificifty, fp rate, tabs for roc curve, definitions?")),
+            fluidRow(
+              column(4,
+                     h4('Confusion Matrix',align='center'),
+                     verbatimTextOutput(outputId="cMatrix_text")
+                     ),
+                
+              column(8,tabBox(id = "resultstabs",width = 12,
+                              tabPanel(title = "ROC Curve",
+                                  plotOutput("aucplot_plot"),
+                                  p('Area under the curve: 0.6841'),
+                                  p('95% CI: 0.6725-0.6958 (DeLong)')),
+                              tabPanel(title = "Definitions",
+                                  h4('ROC Curve'),
+                                  p("Receiver Operating Characteristic curve,
+                                    is a graphical plot that illustrates the diagnostic ability of a binary classifier system as 
+                                    its discrimination threshold is varied"),
+                                  p("The ROC curve is created by plotting the true positive rate against the false positive rate 
+                                    at various threshold settings"),
+                                  br(),
+                                  h4('True Positive (TP)'),
+                                  p('Correctly classified as the class of interest'),
+                                  br(),
+                                  h4('True Negative (TN)'),
+                                  p('Correctly classified as not the class of interest'),
+                                  br(),
+                                  h4('False Positive (FP)'),
+                                  p('Incorrectly classified as the class of interest. It is often called "Type I" error'),
+                                  br(),
+                                  h4('False Negative (FN)'),
+                                  p('Incorrectly classified as not the class of interest. It is often called "Type II" error'),
+                                  br(),
+                                  h4('Confidence Intervals (CI)'),
+                                  p('In pROC packge, the ci function computes the CI of a ROC curve. By default, the 95% CI are computed with 
+                                    2000 stratified bootstrap replicates'),
+                                  br(),
+                                  h4('Confusion Matrix'),
+                                  p('A confusion matrix is a table that is often used to describe the performance of a classification model on 
+                                    a set of test data for which the true values are known'),
+                                  br(),
+                                  h4('Accuracy'),
+                                  p('Accuracy = (TP+TN)/total ')
+                                  
+                                  
+                                  )))
+            )),
+    
     tabItem("predictvis",
             tabBox(id = "predicttabs",width = 6,
                    tabPanel(title = "Variagle Inportance",
