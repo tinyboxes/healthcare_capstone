@@ -127,8 +127,8 @@ shinyServer(function(input, output) {
     imp_pie %>%
       ggplot(aes(x = 1, y = Importance, fill = Feature)) +
       geom_bar(stat = "identity", color = "black")  +
-      scale_y_continuous(breaks= cumsum(imp_pie$Importance) - imp_pie$Importance/2, # center labels
-                            labels=feat_imp$Feature) + scale_fill_discrete(guide=FALSE) +
+      scale_y_continuous(breaks = cumsum(imp_pie$Importance) - imp_pie$Importance/2, # center labels
+                         labels = imp_pie$Feature) + scale_fill_discrete(guide=FALSE) +
       scale_fill_discrete(guide=FALSE) +
       coord_polar(theta = "y", start=0) +
       theme(axis.ticks=element_blank(), axis.title.y=element_blank(), axis.text.y=element_blank())
