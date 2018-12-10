@@ -45,6 +45,7 @@ shinyServer(function(input, output) {
   output$d_g = renderText({
     demo.encounter()[6]
   })
+  
   #days in hospital-EDA  
   output$days_hospital_hist<- renderPlot({
     days_hospital
@@ -100,7 +101,7 @@ shinyServer(function(input, output) {
     race
   })
   
-  #aucplot
+### aucplot + confusion matrix start ###
   output$aucplot_plot<-renderPlot({
     plot(modelroc, print.auc=TRUE, auc.polygon=TRUE,
          grid=c(0.1, 0.2), grid.col=c("green", "red"),
@@ -110,5 +111,31 @@ shinyServer(function(input, output) {
   output$cMatrix_text<-renderPrint({
     cMatrix
   })
+### aucplot + confusion matrix end ###
+  
+#variable importance bar chart
+  output$importance_bar <- renderPlotly({
+    importance_bar
+  })
+  
+#user defined variable pie chart (coord_polar not supported by Plotly)
+  output$importance_pie <- renderPlot({
+    
+    imp_pie <- feat_imp %>%
+      filter(Feature %in% input$feature ) %>%
+      select(Feature, Importance) %>%
+      mutate(pos = cumsum(Importance)-0.5*Importance)
+    
+    imp_pie %>%
+      ggplot(aes(x = 1, y = Importance, fill = Feature)) +
+      geom_bar(stat = "identity", color = "black")  +
+      scale_y_continuous(breaks = cumsum(imp_pie$Importance) - imp_pie$Importance/2, # center labels
+                         labels = imp_pie$Feature) + scale_fill_discrete(guide=FALSE) +
+      scale_fill_discrete(guide=FALSE) +
+      coord_polar(theta = "y", start=0) +
+      theme(axis.ticks=element_blank(), axis.title.y=element_blank(), axis.text.y=element_blank())
+    
+  })
+  
   
 })
