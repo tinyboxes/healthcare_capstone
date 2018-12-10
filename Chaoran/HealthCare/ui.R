@@ -58,19 +58,44 @@ dashboardPage(
                 )), 
     
     tabItem("background",
-            box(h1('Background Research1',align='center'),background='purple',width=24),
+            box(h2('Overview and Public Health Perspective',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p("Diabetes Mellitus is a prominent and growing public health concern that costs the United States economy hundreds of billions 
+                  of dollars each year. Hospital readmissions among diabetes patients are a prominent component behind these high costs."),
+                p("Type 1 and 2 diabetes both relate to an inability of the body to manage blood sugar levels. Type 2 is much more common, and 
+                  coincides highly with an unhealthy lifestyle."),
+                p("Both types of diabetes can be successfully managed through implementing a \"Diabetes Management Program\", which coordinates the communication,
+                  logistics, and education about the disease between medical staff, the patient, and the patient's support network."),
+                p("A predictive tool capable of classifying diabetic patients with a \"high-risk\" of being readmitted to a hospital within 30 days of discharge
+                  enables the identification of patients that would benefit most from a diabetes management program. This enables the allocation of resources
+                  in a manner that optimally reduces costs, improves health outcomes, and saves lives.")
             ),
-            box(h1('Background Research2',align='center'),background='purple',width=24),
+            box(h2('Additional Research',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p('Further research was conducted to estimate values for additional variables that were not available within the dataset. These variables
+                  proved necessary to transfer model predictions into the tangible financial and clinical recommendations necessary for business purposes.
+                  Examples of these variables include:'),
+                p('- the cost of hospital readmission'),
+                p('- the cost of a diabetes management program'),
+                p('- the success rate of a diabetes management program at preventing a 30-day readmission'),
+                p('Other studies that aimed to predict the rate of hospital readmission across patients with diabetes and/or similar
+                  chronic conditions were also reviewed. These studies identified additional variables that have been shown to be useful predictors 
+                  of readmission, but were unfortunately not available within the dataset.'),
+                p("Examples of additional desirable socioeconomic information might include a patient's:"),
+                p('- zip code'),
+                p('- personal support network'),
+                p('- income level'),
+                p('- education level'),
+                p("Examples of additional desirable health information might include a patient's:"),
+                p('- weight'),
+                p('- BMI'),
+                p('- blood pressure levels'),
+                p('- smoking habits'),
+                p('- access to regular primary care')
+                
             )
     ),
+    
     tabItem("eda",
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
