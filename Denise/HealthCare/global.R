@@ -71,40 +71,40 @@ days_hospital<- ggplotly(group_by(df_train,time_in_hospital,readmitted)%>%
 #graph for number of labs in EDA
 num_lab<-ggplotly(group_by(df_train,num_lab_procedures,readmitted)%>%
   summarise(count=n())%>%
-  ggplot(aes(x=num_lab_procedures,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=num_lab_procedures,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
   #ggplot(aes(x=num_medications,y=count,color=readmitted))+geom_line()
 
 #graph for number of medications in EDA
 num_meds<-ggplotly(group_by(df_train,num_medications,readmitted)%>%
   summarise(count=n())%>%
-  ggplot(aes(x=num_medications,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=num_medications,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
 
 #graph for age in EDA
 age<-ggplotly(group_by(df_train,age,readmitted)%>%
   summarise(count=n())%>%
-  ggplot(aes(x=age,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=age,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
 
 #graph for Metformin in EDA
 metformin<-ggplotly(group_by(df_train,med_metformin,readmitted)%>%
   summarise(count=n())%>%
-  ggplot(aes(x=med_metformin,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=med_metformin,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
 
 #graph for insulin in EDA
 insulin<-ggplotly(group_by(df_train,med_insulin,readmitted)%>%
   summarise(count=n())%>%
-  ggplot(aes(x=med_insulin,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=med_insulin,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
 
 #graph for race in EDA
 race<-ggplotly(group_by(df_train,race,readmitted)%>% 
   summarise(count=n())%>%
-  ggplot(aes(x=race,y=count,fill=readmitted,))+geom_bar(stat="identity",position='dodge'))
+  ggplot(aes(x=race,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge'))
 
 ##Feature Importance Bar Graph
 importance_bar <- ggplotly(feat_imp %>% 
                              top_n(20, Importance) %>%
                              ggplot() + 
                              geom_bar(aes(x=reorder(Feature, Importance), y = Importance, fill=Importance), stat = "identity") + 
-                             coord_flip() + labs (x = 'Feature', y = 'Importance'), tooltip = c("x", "y"))
+                             coord_flip() + labs (x = 'Variable', y = 'Importance'), tooltip = c("x", "y"))
 
 ##First tab patient table
 f.t.p.t. = df_test %>%

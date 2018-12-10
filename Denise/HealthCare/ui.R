@@ -170,19 +170,43 @@ dashboardPage(
             )),
 
   tabItem("predictvis",
-          tabBox(id = "predicttabs", width= 8,
-                 tabPanel(title = "Variable Importance",
-                          plotlyOutput("importance_bar"),
-                          helpText('Above are the top 20 variables contributing to patient readmission.')),
-
-                 tabPanel(title = "User Options",
-                          plotOutput("importance_pie"))),
-          box(width=4,
-              helpText('Select features from the drop down box below.'),
-              selectInput("feature",
-                          "Features: ", choices = feat_imp$Feature,
-                          multiple = TRUE, selected = 'age')
-              )
+          fluidRow(
+            box(id = "readmissioPie", width = 6,
+              plotOutput("readmission_pie"),
+              plotOutput("importance_pie")),
+            tabBox(id = "predicttabs", width = 6,
+                   tabPanel(title = "Variable Importance",
+                            plotlyOutput("importance_bar"),
+                            helpText('Above are the top 20 variables contributing to patient readmission.')),
+                   tabPanel(title = "Readmission Variables",
+                            helpText('Select features from the drop down box below.'),
+                            selectInput("feature",
+                                        "Features: ", choices = feat_imp$Feature,
+                                        multiple = TRUE, selected = c('age', 'time_in_hospital', 'num_medications'))),
+                   tabPanel(title = "User Options",
+                           helpText("Select variables from the drop down boxes below."),
+                           selectInput("gender",
+                                       "Gender:", choices = unique(df_test$gender), selected = 'Male'),
+                           selectInput("race",
+                                       "Race:", choices = unique(df_test$race), selected = 'African American'),
+                           selectInput("age",
+                                       "Age Group:", choices = unique(df_test$age), selected = '30 - 40'),
+                          
+                           sliderInput("time",
+                                       "Time in Hospital (days):", min = 0, 
+                                       max = 14, value = 1),
+                           # sliderInput("numLabs",
+                           #             "Nummber of Lab Procedures:", min = 0, 
+                           #             max = 120, value = 44),
+                           sliderInput("numPro",
+                                       "Numer of Medical Procedures:", min = 0, 
+                                       max = 6, value = 1)
+                           # ,
+                           # sliderInput("numMeds",
+                           #             "Number of Medications:", min = 0, 
+                           #             max = 69, value = 15)
+                           )
+                   ))
           ),
 
     tabItem("patients",fluidRow(column(7, dataTableOutput("table")),
