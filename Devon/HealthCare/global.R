@@ -77,7 +77,7 @@ df = df %>%
                                    primarydiag == "musculoskeletal" ~ "Musculoskeletal",
                                    primarydiag == "neoplasm" ~ "Neoplasm",
                                    primarydiag == "nervous" ~ "Nervous",
-                                   primarydiag == "Nothing" ~ "Nothing",
+                                   primarydiag == "Nothing" ~ "Diabetes",
                                    primarydiag == "other" ~ "Other",
                                    primarydiag == "pregnancy" ~ "Pregnancy",
                                    primarydiag == "respiratory" ~ "Respiratory",
@@ -201,6 +201,16 @@ f.t.p.t. = df_test %>%
 ##Second tab patient table
 s.t.p.t. = df_test %>%
   select(.,admission_type_id,admission_source_id,discharge_disposition,time_in_hospital,number_inpatient,number_outpatient,number_emergency)
+
+##Third tab
+t.t.p.t. = df_test %>%
+  select(.,primarydiag,A1Cresult,max_glu_serum)
+
+##For secondary diagnoses
+diags = df_test[,51:65]
+diabdiags = df_test[,66:73]
+catvec = c("Blood Disorder","Circulatory","Digestive","Infection","Injury","Mental Disorder","Metabolic",
+           "Musculoskeletal","Neoplasm","Nervous","Other","Pregnancy","Respiratory","Skin","Urogenital","Diabetes")
 
 ### start of Results tab code###
 test_obs <- ifelse(df_test$readmitted=="Yes",1,0)

@@ -73,6 +73,37 @@ shinyServer(function(input, output) {
   output$hi_ev = renderText({
     h.i.encounter()[7]
   })
+  d.t.encounter = reactive({
+    s = input$table_rows_selected
+    print(as.character(t.t.p.t.[s,]))
+  })
+  output$dt_pd = renderText({
+    d.t.encounter()[1]
+  })
+  output$dt_a1c = renderText({
+    d.t.encounter()[2]
+  })
+  output$dt_mgs = renderText({
+    d.t.encounter()[3]
+  })
+  ###For secondary diagnoses
+  s.d.vector = reactive({
+    s = input$table_rows_selected
+    prime = as.character(t.t.p.t.[s,1])
+    secondary = vector(mode = "character",length = 16)
+    for(i in 1:15){
+      secondary[i] = ifelse(diags[s,i] == 1,catvec[i],NA)
+    }
+    secondary[16] = ifelse(rowSums(diabdiags[s,]) != 0,catvec[16],NA)
+    secondary = secondary[!is.na(secondary)]
+    fsecondary = setdiff(secondary,prime)
+    fsecondary = paste(fsecondary,collapse = ", ")
+    fsecondary = ifelse(nchar(fsecondary) == 0, "No Additional Diagnoses",fsecondary)
+    print(fsecondary)
+  })
+  output$s_d = renderText({
+    s.d.vector()
+  })
   #days in hospital-EDA  
   output$days_hospital_hist<- renderPlot({
     days_hospital
