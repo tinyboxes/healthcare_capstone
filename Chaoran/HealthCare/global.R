@@ -6,7 +6,8 @@ library(plotly)
 library(pROC)
 library(caret)
 
-df<- read.csv(file = "./DiabetesTrainTestForShiny.csv",stringsAsFactors = F) #Diabetes DataSet
+
+df<- read.csv(file = "./DiabetesTrainTestForShiny.csv",stringsAsFactors = FALSE)
 feat_imp = read.csv(file = "./feat_imp.csv",stringsAsFactors = F) #Feature Importance
 
 #Edit Variables to Be More Readable to the User
