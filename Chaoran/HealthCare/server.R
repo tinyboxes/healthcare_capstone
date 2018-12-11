@@ -116,12 +116,12 @@ shinyServer(function(input, output) {
     importance_bar
   })
 
-  #user defined readmission pie chart (coord_polar not supported by Plotly)
+#user defined readmission pie chart (coord_polar not supported by Plotly)
   output$readmission_pie <- renderPlot({
 
     readmit_pie <- df_test %>%
       filter(gender %in% input$gender & race %in% input$race  & age %in% input$age &
-             time_in_hospital %in% input$time & num_procedures %in% input$numPro) %>%
+               time_in_hospital %in% input$time & num_procedures %in% input$numPro) %>%
       group_by(predict_cat) %>%
       summarise(count = n()) %>%
       mutate(percent=count/sum(count)*100)
@@ -142,7 +142,7 @@ shinyServer(function(input, output) {
 
   })
 
-  #user defined variable pie chart (coord_polar not supported by Plotly)
+#user defined variable pie chart (coord_polar not supported by Plotly)
   output$importance_pie <- renderPlot({
 
     imp_pie <- feat_imp %>%

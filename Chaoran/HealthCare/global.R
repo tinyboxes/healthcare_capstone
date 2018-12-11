@@ -117,6 +117,7 @@ race<-ggplotly(group_by(df_train,race,readmitted)%>%
   layout(margin=m)
 ### End of EDA tab code ###
 
+
 ### start of Results tab code###
 test_obs <- ifelse(df_test$readmitted=="Yes",1,0)
 pred_obs <- ifelse(df_test$predict_cat=='Yes',1,0)
@@ -134,6 +135,8 @@ importance_bar <- ggplotly(feat_imp %>%
                              coord_flip() + labs (x = 'Feature', y = 'Importance'), tooltip = c("x", "y"))
 
 ### End Prediction Visuals ###
+
+
 
 ##First tab patient table
 f.t.p.t. = df_test %>%
