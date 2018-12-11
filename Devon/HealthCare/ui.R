@@ -207,9 +207,16 @@ dashboardPage(
                                                          textOutput("hi_ov"),
                                                          h4("Number of Emergency Visits (Prior Year):"),
                                                          textOutput("hi_ev")),
-                                                tabPanel(title = "Test Results",
-                                                         print("Test values"))))),
-            print("Have a clickable table, tabs for patient information")),
+                                                tabPanel(title = "Diagnoses/Test Results",
+                                                         h4("Primary Diagnosis:"),
+                                                         textOutput("dt_pd"),
+                                                         h4("Additional Diagoses:"),
+                                                         textOutput("s_d"),
+                                                         h4("A1C Results:"),
+                                                         textOutput("dt_a1c"),
+                                                         h4("Glucose Levels:"),
+                                                         textOutput("dt_mgs")
+                                                         ))))),
     
     tabItem("cost",
             print("Back to Adrian/Tim for their cost information"))
