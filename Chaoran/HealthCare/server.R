@@ -46,6 +46,64 @@ shinyServer(function(input, output) {
     demo.encounter()[6]
   })
   
+  ##For patient Tab 2
+  h.i.encounter = reactive({
+    s = input$table_rows_selected
+    print(as.character(s.t.p.t.[s,]))
+  })
+  output$hi_at = renderText({
+    h.i.encounter()[1]
+  })
+  output$hi_as = renderText({
+    h.i.encounter()[2]
+  })
+  output$hi_th = renderText({
+    h.i.encounter()[4]
+  })
+  output$hi_dd = renderText({
+    h.i.encounter()[3]
+  })
+  output$hi_iv = renderText({
+    h.i.encounter()[5]
+  })
+  output$hi_ov = renderText({
+    h.i.encounter()[6]
+  })
+  output$hi_ev = renderText({
+    h.i.encounter()[7]
+  })
+  d.t.encounter = reactive({
+    s = input$table_rows_selected
+    print(as.character(t.t.p.t.[s,]))
+  })
+  output$dt_pd = renderText({
+    d.t.encounter()[1]
+  })
+  output$dt_a1c = renderText({
+    d.t.encounter()[2]
+  })
+  output$dt_mgs = renderText({
+    d.t.encounter()[3]
+  })
+  ###For secondary diagnoses
+  s.d.vector = reactive({
+    s = input$table_rows_selected
+    prime = as.character(t.t.p.t.[s,1])
+    secondary = vector(mode = "character",length = 16)
+    for(i in 1:15){
+      secondary[i] = ifelse(diags[s,i] == 1,catvec[i],NA)
+    }
+    secondary[16] = ifelse(rowSums(diabdiags[s,]) != 0,catvec[16],NA)
+    secondary = secondary[!is.na(secondary)]
+    fsecondary = setdiff(secondary,prime)
+    fsecondary = paste(fsecondary,collapse = ", ")
+    fsecondary = ifelse(nchar(fsecondary) == 0, "No Additional Diagnoses",fsecondary)
+    print(fsecondary)
+  })
+  output$s_d = renderText({
+    s.d.vector()
+  })
+  
   #days in hospital-EDA  
   output$days_hospital_hist<- renderPlot({
     days_hospital
@@ -123,7 +181,7 @@ shinyServer(function(input, output) {
     
     readmit_pie <- df_test %>%
       filter(gender %in% input$gender & race %in% input$race  & age %in% input$age &
-               time_in_hospital %in% input$time & num_procedures %in% input$numPro) %>%
+               (time_in_hospital >= input$time) & (num_procedures >= input$numPro)) %>%
       group_by(predict_cat) %>%
       summarise(count = n()) %>%
       mutate(percent=count/sum(count)*100)
@@ -166,6 +224,23 @@ shinyServer(function(input, output) {
       ggtitle("Variable Contribution to Readmission")
     
   })
+
+#cost function outputs
   
+  output$savings <- renderText({
+    drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[1] #input from user interface
+  })
+  
+  output$aveSavings <- renderText({
+    drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[2]
+  })
+  
+  output$reduction <- renderText({
+    drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[3]
+  })
+  
+  output$perReduction <- renderText({
+    drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[4]
+  })
   
 })
