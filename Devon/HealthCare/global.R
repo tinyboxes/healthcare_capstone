@@ -54,6 +54,36 @@ df = df %>%
                                            admission_source_id == 6 ~ "Transfer from another Health Care Facility",
                                            admission_source_id == 7 ~ "Emergency Room",
                                            admission_source_id == 8 ~ "Other"))
+df = df %>%
+  mutate(.,A1Cresult = case_when(A1Cresult == "NotTaken" ~ "Not Taken",
+                                 A1Cresult == "Norm" ~ "Normal",
+                                 A1Cresult == ">7" ~ ">7",
+                                 A1Cresult == ">8" ~ ">8"))
+
+df = df %>%
+  mutate(.,max_glu_serum = case_when(max_glu_serum == "NotTaken" ~ "Not Taken",
+                                     max_glu_serum == "Norm" ~ "Normal",
+                                     max_glu_serum == ">200" ~ ">200",
+                                     max_glu_serum == ">300" ~ ">300"))
+
+df = df %>%
+  mutate(.,primarydiag = case_when(primarydiag == "blooddis" ~ "Blood Disorder",
+                                   primarydiag == "circulatory" ~ "Circulatory",
+                                   primarydiag == "digestive" ~ "Digestive",
+                                   primarydiag == "infection" ~ "Infection",
+                                   primarydiag == "injury" ~ "Injury",
+                                   primarydiag == "mentaldis" ~ "Mental Disorder",
+                                   primarydiag == "metabolic" ~ "Metabolic",
+                                   primarydiag == "musculoskeletal" ~ "Musculoskeletal",
+                                   primarydiag == "neoplasm" ~ "Neoplasm",
+                                   primarydiag == "nervous" ~ "Nervous",
+                                   primarydiag == "Nothing" ~ "Nothing",
+                                   primarydiag == "other" ~ "Other",
+                                   primarydiag == "pregnancy" ~ "Pregnancy",
+                                   primarydiag == "respiratory" ~ "Respiratory",
+                                   primarydiag == "skin" ~ "Skin",
+                                   primarydiag == "urogenital" ~ "Urogenital"))
+
 ##
 df_train<-df%>%filter(IsTrain==1) # for EDA
 df_test<-df%>%filter(IsTrain==0) # no prediction result in this df
@@ -88,7 +118,7 @@ A1C <- ggplotly(group_by(df_train, A1Cresult, readmitted) %>%
   summarise(count=n())%>%
   ggplot(aes(x=A1Cresult,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') + theme(plot.subtitle = element_text(vjust = 1), 
     plot.caption = element_text(vjust = 1)) +labs(title = "Number of Readmissions Based on A1C Results", 
-    x = "A1C Results", y = "Number of Patients") + scale_x_discrete(limits=c("NotTaken","Norm",">7",">8")))%>%
+    x = "A1C Results", y = "Number of Patients") + scale_x_discrete(limits=c("Not Taken","Normal",">7",">8")))%>%
   layout(margin=m)
 
 #graph for diagnoses  in EDA
