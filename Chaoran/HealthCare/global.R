@@ -8,6 +8,7 @@ library(caret)
 
 
 df<- read.csv(file = "./DiabetesTrainTestForShiny.csv",stringsAsFactors = FALSE)
+feat_imp = read.csv(file = "./feat_imp.csv",stringsAsFactors = F) #Feature Importance
 
 #Edit Variables to Be More Readable to the User
 #Edit Race
@@ -118,15 +119,27 @@ race<-ggplotly(group_by(df_train,race,readmitted)%>%
 ### End of EDA tab code ###
 
 
-##First tab patient table
-f.t.p.t. = df_test %>%
-  select(.,predict_cat,encounter_id,patient_nbr,age,race,gender)
-
 ### start of Results tab code###
 test_obs <- ifelse(df_test$readmitted=="Yes",1,0)
 pred_obs <- ifelse(df_test$predict_cat=='Yes',1,0)
 modelroc <- roc(test_obs, df_test$predict_prob)
 cMatrix <- confusionMatrix(as.factor(pred_obs),as.factor(test_obs),positive = '1')
-
 ### end of Results tab code###
+
+
+### Prediction Visuals ###
+# Feature Importance Bar Graph
+importance_bar <- ggplotly(feat_imp %>%
+                             top_n(20, Importance) %>%
+                             ggplot() +
+                             geom_bar(aes(x=reorder(Feature, Importance), y = Importance, fill=Importance), stat = "identity") +
+                             coord_flip() + labs (x = 'Feature', y = 'Importance'), tooltip = c("x", "y"))
+
+### End Prediction Visuals ###
+
+
+
+##First tab patient table
+f.t.p.t. = df_test %>%
+  select(.,predict_cat,encounter_id,patient_nbr,age,race,gender)
   

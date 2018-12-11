@@ -32,7 +32,7 @@ TrainLR = FinalTrain.drop(['diabfeat_neurologic', 'race_AfricanAmerican', 'A1Cre
     'admission_source_id_3', 'change_Ch', 'diag_circulatory', 'medical_specialty_Gastroenterology', 'medical_specialty_Surgery',
     'primarydiag_infection', 'primarydiag_mentaldis'], axis=1)
 TrainLRX = TrainLR.drop('readmitted', axis=1)
-TrainLRY = TrainLR['readmitted']
+TrainLRY = TrainLR['readmitted'].replace([2,1], [1,0])
 
 from sklearn.linear_model import LogisticRegression as lgr
 
@@ -50,7 +50,7 @@ rfc.set_params(n_estimators=1000, min_samples_split=5, min_samples_leaf=1, max_f
                max_depth=60, random_state=42, class_weight={0:.2, 1:.8})
 
 FinalTrainX = FinalTrain.drop('readmitted', axis=1)
-FinalTrainY = FinalTrain['readmitted']
+FinalTrainY = FinalTrain['readmitted'].replace([2,1], [1,0])
 
 rfc.fit(FinalTrainX, FinalTrainY)
 
@@ -72,11 +72,11 @@ TestDFLR = TestDF.drop((['diabfeat_neurologic', 'race_AfricanAmerican', 'A1Cresu
     'admission_source_id_3', 'change_Ch', 'diag_circulatory', 'medical_specialty_Gastroenterology', 'medical_specialty_Surgery',
     'primarydiag_infection', 'primarydiag_mentaldis'], axis=1))
 
-predictprobsLR = lgr.predict_proba(TestDFLR)
+predictprobsLR = lgr.predict_proba(TestDFLR)[:,1]
 
-predictprobsRF = rfc.predict_proba(TestDF)
+predictprobsRF = rfc.predict_proba(TestDF)[:,1]
 
-predictprobsXG = xgb.predict_proba(TestDF)
+predictprobsXG = xgb.predict_proba(TestDF)[:,1]
 
 predictprobs = 56*predictprobsXG/100 + 23*predictprobsRF/100 + 21*predictprobsLR/100
 predictYN = np.zeros(len(predictprobs))
