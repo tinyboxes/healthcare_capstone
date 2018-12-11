@@ -239,8 +239,5 @@ shinyServer(function(input, output) {
     drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[3]
   })
   
-  output$perReduction <- renderText({
-    drp(0.993637,0.959489,input$rate, input$pop, input$stay, input$cost,0.5,500)[4]
-  })
   
 })
