@@ -58,19 +58,44 @@ dashboardPage(
                 )),
 
     tabItem("background",
-            box(h1('Background Research1',align='center'),background='purple',width=24),
+            box(h2('Overview and Public Health Perspective',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p("Diabetes Mellitus is a prominent and growing public health concern that costs the United States economy hundreds of billions
+                  of dollars each year. Hospital readmissions among diabetes patients are a prominent component behind these high costs."),
+                p("Type 1 and 2 diabetes both relate to an inability of the body to manage blood sugar levels. Type 2 is much more common, and
+                  coincides highly with an unhealthy lifestyle."),
+                p("Both types of diabetes can be successfully managed through implementing a \"Diabetes Management Program\", which coordinates the communication,
+                  logistics, and education about the disease between medical staff, the patient, and the patient's support network."),
+                p("A predictive tool capable of classifying diabetic patients with a \"high-risk\" of being readmitted to a hospital within 30 days of discharge
+                  enables the identification of patients that would benefit most from a diabetes management program. This enables the allocation of resources
+                  in a manner that optimally reduces costs, improves health outcomes, and saves lives.")
             ),
-            box(h1('Background Research2',align='center'),background='purple',width=24),
+            box(h2('Additional Research',align='left'),background='purple',width=24),
             box(background='light-blue', width=24,
-                p('about'),
-                p('about'),
-                p('about')
+                p('Further research was conducted to estimate values for additional variables that were not available within the dataset. These variables
+                  proved necessary to transfer model predictions into the tangible financial and clinical recommendations necessary for business purposes.
+                  Examples of these variables include:'),
+                p('- the cost of hospital readmission'),
+                p('- the cost of a diabetes management program'),
+                p('- the success rate of a diabetes management program at preventing a 30-day readmission'),
+                p('Other studies that aimed to predict the rate of hospital readmission across patients with diabetes and/or similar
+                  chronic conditions were also reviewed. These studies identified additional variables that have been shown to be useful predictors
+                  of readmission, but were unfortunately not available within the dataset.'),
+                p("Examples of additional desirable socioeconomic information might include a patient's:"),
+                p('- zip code'),
+                p('- personal support network'),
+                p('- income level'),
+                p('- education level'),
+                p("Examples of additional desirable health information might include a patient's:"),
+                p('- weight'),
+                p('- BMI'),
+                p('- blood pressure levels'),
+                p('- smoking habits'),
+                p('- access to regular primary care')
+
             )
     ),
+
     tabItem("eda",
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
@@ -169,21 +194,47 @@ dashboardPage(
                                   )))
             )),
 
-  tabItem("predictvis",
-          tabBox(id = "predicttabs", width= 8,
-                 tabPanel(title = "Variable Importance",
-                          plotlyOutput("importance_bar"),
-                          helpText('Above are the top 20 variables contributing to patient readmission.')),
+    tabItem("predictvis",
+            fluidRow(
+              box(id = "readmissioPie", width = 6,
+                  plotOutput("readmission_pie"),
+                  plotOutput("importance_pie")),
+              tabBox(id = "predicttabs", width = 6,
+                     tabPanel(title = "Variable Importance",
+                              plotlyOutput("importance_bar"),
+                              helpText('Above are the top 20 variables contributing to patient readmission.')),
+                     tabPanel(title = "Readmission Variables",
+                              helpText('Select features from the drop down box below.'),
+                              selectInput("feature",
+                                          "Features: ", choices = feat_imp$Feature,
+                                          multiple = TRUE, selected = c('age', 'time_in_hospital', 'num_medications'))),
+                     tabPanel(title = "User Options",
+                              helpText("Select variables from the drop down boxes below."),
+                              selectInput("gender",
+                                          "Gender:", choices = unique(df_test$gender), selected = 'Male'),
+                              selectInput("race",
+                                          "Race:", choices = unique(df_test$race), selected = 'African American'),
+                              selectInput("age",
+                                          "Age Group:", choices = unique(df_test$age), selected = '30 - 40'),
 
-                 tabPanel(title = "User Options",
-                          plotOutput("importance_pie"))),
-          box(width=4,
-              helpText('Select features from the drop down box below.'),
-              selectInput("feature",
-                          "Features: ", choices = feat_imp$Feature,
-                          multiple = TRUE, selected = 'age')
-              )
-          ),
+                              sliderInput("time",
+                                          "Time in Hospital (days):", min = 1,
+                                          max = 14, value = 1),
+                              # sliderInput("numLabs",
+                              #             "Nummber of Lab Procedures:", min = 0,
+                              #             max = 120, value = 44),
+                              # didn't include, needed to simplify filter to get enough data points
+                              sliderInput("numPro",
+                                          "Numer of Medical Procedures:", min = 0,
+                                          max = 6, value = 1)
+                              # ,
+                              # sliderInput("numMeds",
+                              #             "Number of Medications:", min = 0,
+                              #             max = 69, value = 15)
+                              # didn't include, needed to simplify filter to get enough data points
+                     )
+              ))
+    ),
 
     tabItem("patients",fluidRow(column(7, dataTableOutput("table")),
                                 column(5,tabBox(id = "predicttabs",width = 12,
@@ -207,7 +258,90 @@ dashboardPage(
             print("Have a clickable table, tabs for patient information")),
 
     tabItem("cost",
-            print("Back to Adrian/Tim for their cost information"))
-
-  ))
+            fluidRow(
+              box(width = 3, title = "Parameters",
+                  solidHeader = TRUE, status = "primary",
+                  sliderInput(inputId = "pop",
+                              label = "Patient Population",
+                              value = 100000, min = 50000, max = 500000),
+                  sliderInput(inputId = "rate",
+                              label = "Readmission Rate",
+                              value = 0.10, min = 0.0, max = 0.15,step = 0.01),
+                  sliderInput(inputId = "tpr",
+                              label = "True Positive Rate",
+                              value = 0.60, min = 0.0, max = 1.00, step = 0.02),
+                  sliderInput(inputId = "fpr",
+                              label = "False Positive Rate",
+                              value = 0.16, min = 0.0, ma = 1.00, step = 0.02)
+                  
+                ),
+              box(width = 8, title = "Cost Modeling and Finances",
+                  uiOutput('costfx'),
+                  helpText("Simplified Equation"),
+                  p(withMathJax("$$Total Savings = (RC * TP * RP) - DMC * (TP + FP)$$")),
+                  strong("Variables:"),
+                  p("TP = True Positive Count"),
+                  p("FP = False Positive Count"),
+                  p("RC = Cost of Readmission/Patient"),
+                  p("DMC = Cost of Diabetes Management Care/Patient"),
+                  p("RP = Readmissions % Prevented"))
+            ),
+    
+            fluidRow(
+              box(width = 12, title = "Description of Total Savings Equation",
+                  solidHeader = TRUE, status = "primary",
+                  p("With a strong prediction model in hand, it was necessary to determine how much a diabetes
+                    management (DM) program could save health service payers (i.e. a private insurer, public health
+                    insurance such as Medicare or Medicaid, or the individual if they lack coverage). Many of the
+                    numbers used to project these savings were estimates derived through literature review. Actual
+                    values likely vary depending on a number of factors such as geography, and underlying differences
+                    across patient populations and medical staff."),
+                  p("A Shiny web application that enables the imputation of a range of values for these metrics
+                    accounts for this variation. This application enables customized financial predictions tailored
+                    meet the nuanced situations within various different health care scenarios. However specific
+                    values were selected for the purposes of presentation."))
+              ),
+    
+            fluidRow(
+              box(width = 12, title = "Savings on Readmissions",
+                  solidHeader = TRUE, status = "primary",
+                  p("The expense per readmission is quite high for the healthcare payer. Based on literature review,
+                    it was estimated that the average cost per day of hospital care fluctuates around $10,000. Based
+                    on the population within the dataset, the average length of a hospital stay was calculated to be
+                    at 4.5 days. Therefore the estimated savings for each prevented readmission was calculated to be
+                    approximately $45,000."),
+                  p("Just because an at-risk individual receives a DM program, it is not guaranteed that a
+                    readmission will be avoided. Even with perfect execution, it is possible that a comorbidity,
+                    such as heart or liver disease, or any number of external factors may still result in a readmission.
+                    The estimated success rate of the diabetes management program hovered around 39%."),
+                  p("Therefore the savings from readmissions is calculated to be a from the product of:"),
+                  p("- the per patient cost of readmission "),
+                  p("- the number of true positives identified and enrolled within a DM program"),
+                  p("- the success rate of a DM program at preventing a readmission"))
+              ),
+    
+            fluidRow(
+              box(width = 12, title = "Expense of Diabetes Management Program",
+                  solidHeader = TRUE, status = "primary",
+              p("Implementing the DM program requires an upfront expenditure on the part of the healthcare payer.
+                This expenditure is subtracted from the savings produced through reduced readmissions. The cost of
+                the DM program is based on the time of the physician, discharge nurse, and home visiting nurse, and
+                was estimated to be $500 per patient based on literature review. "),
+              p("However, not every readmission predicted through the model is accurate. A number of false positives
+                are also identified, and are still enrolled within the DM program. The upfront expenditure for the plan
+                must be applied to both the true, and false positive predictions of the model."),
+              p("Therefore expenditure from implementing DM program is determined by the product of:"),
+              p("- the cost of the DM program per enrolled patient"),
+              p("- the sum of both the true and false positives"),
+              p("Through variations of this basic equation, a number of other performance metrics relevant to the success
+                of the DM program may also be derived. Our Shiny application allows for the easy calculation of all of these
+                related metrics, based on the input parameters selected by the user. Examples of these additional
+                performance metrics include:"),
+              p("- the number of readmissions prevented "),
+              p("- the percentage reduction in readmissions"),
+              p("- the average savings realized from each diabetes patient"))
+              )
+            )
+    )
+)
 )
