@@ -115,23 +115,23 @@ shinyServer(function(input, output) {
   output$importance_bar <- renderPlotly({
     importance_bar
   })
-    
-  #user defined readmission pie chart (coord_polar not supported by Plotly)
+
+#user defined readmission pie chart (coord_polar not supported by Plotly)
   output$readmission_pie <- renderPlot({
-    
+
     readmit_pie <- df_test %>%
-      filter(gender %in% input$gender & race %in% input$race  & age %in% input$age & 
-             time_in_hospital %in% input$time & num_procedures %in% input$numPro) %>% 
+      filter(gender %in% input$gender & race %in% input$race  & age %in% input$age &
+               time_in_hospital %in% input$time & num_procedures %in% input$numPro) %>%
       group_by(predict_cat) %>%
       summarise(count = n()) %>%
       mutate(percent=count/sum(count)*100)
-    
-    
+
+
     readmit_pie %>%
       ggplot(aes(x = "", y = percent, fill = predict_cat)) +
       geom_bar(stat = "identity", color = "black")  +
       coord_polar(theta = "y", start=0) +
-      geom_text(aes(label = paste0(predict_cat,":", round(percent), "%")), 
+      geom_text(aes(label = paste0(predict_cat,":", round(percent), "%")),
                 position = position_stack(vjust = 0.5)) +
       scale_fill_discrete(guide=FALSE) +
       theme(axis.ticks = element_blank(),
@@ -139,22 +139,22 @@ shinyServer(function(input, output) {
             axis.title = element_blank(),
             plot.caption = element_text(hjust = 0.5)) +
       ggtitle("Readmission Ratio for Select Variables")
-    
+
   })
-  
-  #user defined variable pie chart (coord_polar not supported by Plotly)
+
+#user defined variable pie chart (coord_polar not supported by Plotly)
   output$importance_pie <- renderPlot({
-    
+
     imp_pie <- feat_imp %>%
       filter(Feature %in% input$feature) %>%
       select(Feature, Importance) %>%
       mutate(percent=Importance/sum(Importance)*100)
-    
+
     imp_pie %>%
       ggplot(aes(x = factor(1), y = percent, fill = Feature)) +
       geom_bar(stat = "identity", color = "black")  +
-      geom_text(aes(label = paste0(Feature, ":", round(percent), "%")), 
-                position = position_stack(vjust = 0.5), size = 3) + 
+      geom_text(aes(label = paste0(Feature, ":", round(percent), "%")),
+                position = position_stack(vjust = 0.5), size = 3) +
       scale_fill_discrete(guide=FALSE) +
       coord_polar(theta = "y", start=0) +
       theme(axis.ticks = element_blank(),
@@ -162,6 +162,15 @@ shinyServer(function(input, output) {
             axis.title = element_blank(),
             plot.caption = element_text(hjust = 0.5)) +
       ggtitle("Variable Contribution to Readmission")
+
+  })
+
+#cost function
+  output$costfx <- renderUI({
+    drp(input$tpr, input$fpr, input$rate, input$pop)
+    # x <- round(rcauchy(1), 3)
+    # withMathJax(sprintf("If \\(X\\) is a Cauchy random variable, then
+    #                     $$P(X \\leq %.03f ) = %.03f$$", x, pcauchy(x)))
     
   })
 

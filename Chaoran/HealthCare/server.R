@@ -165,4 +165,13 @@ shinyServer(function(input, output) {
 
   })
 
+#cost function
+  output$costfx <- renderUI({
+    drp(input$tpr, input$fpr, input$rate, input$pop)
+    # x <- round(rcauchy(1), 3)
+    # withMathJax(sprintf("If \\(X\\) is a Cauchy random variable, then
+    #                     $$P(X \\leq %.03f ) = %.03f$$", x, pcauchy(x)))
+    
+  })
+
 })

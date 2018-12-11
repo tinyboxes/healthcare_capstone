@@ -259,73 +259,89 @@ dashboardPage(
 
     tabItem("cost",
             fluidRow(
-              column(8,
-                     title = "Cost Modeling and Finances",
-                     h3("Cost Modeling and Finances",align='center'),br(),
-                     strong("Total Savings = (RC * TP * RP) - (DMC * (TP + FP))"),
-                     br(),br(),
-                     strong("Variables:"),
-                     p("TP = Count of True Positives identified"),
-                     p("FP = Count of False Positives identified"),
-                     p("RC = Cost of Readmission per patient"),
-                     p("DMC = Cost of Diabetes  per patient"),
-                     p("RP = Percentage of readmissions prevented by the diabetes management program participation"),
-                     br(),br(),
-                     strong('Description of Total Savings Equation:'),
-                     p("With a strong prediction model in hand, it was necessary to determine how much a diabetes
-                       management (DM) program could save health service payers (i.e. a private insurer, public health
-                       insurance such as Medicare or Medicaid, or the individual if they lack coverage). Many of the
-                       numbers used to project these savings were estimates derived through literature review. Actual
-                       values likely vary depending on a number of factors such as geography, and underlying differences
-                       across patient populations and medical staff."),
-                     p("A Shiny web application that enables the imputation of a range of values for these metrics
-                       accounts for this variation. This application enables customized financial predictions tailored
-                       meet the nuanced situations within various different health care scenarios. However specific
-                       values were selected for the purposes of presentation."),
-                     br(),br(),
-                     strong('Savings on Readmissions:'),
-                     p("The expense per readmission is quite high for the healthcare payer. Based on literature review,
-                       it was estimated that the average cost per day of hospital care fluctuates around $10,000. Based
-                       on the population within the dataset, the average length of a hospital stay was calculated to be
-                       at 4.5 days. Therefore the estimated savings for each prevented readmission was calculated to be
-                       approximately $45,000."),
-                     p("Just because an at-risk individual receives a DM program, it is not guaranteed that a
-                       readmission will be avoided. Even with perfect execution, it is possible that a comorbidity,
-                       such as heart or liver disease, or any number of external factors may still result in a readmission.
-                       The estimated success rate of the diabetes management program hovered around 39%."),
-                     p("Therefore the savings from readmissions is calculated to be a from the product of:"),
-                     p("- the per patient cost of readmission "),
-                     p("- the number of true positives identified and enrolled within a DM program"),
-                     p("- the success rate of a DM program at preventing a readmission"),
-                     br(),br(),
-                     strong("Expense of Diabetes Management Program:"),
-                     p("Implementing the DM program requires an upfront expenditure on the part of the healthcare payer.
-                       This expenditure is subtracted from the savings produced through reduced readmissions. The cost of
-                       the DM program is based on the time of the physician, discharge nurse, and home visiting nurse, and
-                       was estimated to be $500 per patient based on literature review. "),
-                     p("However, not every readmission predicted through the model is accurate. A number of false positives
-                       are also identified, and are still enrolled within the DM program. The upfront expenditure for the plan
-                       must be applied to both the true, and false positive predictions of the model."),
-                     p("Therefore expenditure from implementing DM program is determined by the product of:"),
-                     p("- the cost of the DM program per enrolled patient"),
-                     p("- the sum of both the true and false positives"),
-                     p("Through variations of this basic equation, a number of other performance metrics relevant to the success
-                       of the DM program may also be derived. Our Shiny application allows for the easy calculation of all of these
-                       related metrics, based on the input parameters selected by the user. Examples of these additional
-                       performance metrics include:"),
-                     p("- the number of readmissions prevented "),
-                     p("- the percentage reduction in readmissions"),
-                     p("- the average savings realized from each diabetes patient")
-                        ),
-
-                  column(4,
-                         box(width = 12,
-                           h3("Caculation Tool"),
-                           p('input1'),
-                           p('input2')
-                           )
-                         )
-
-
-                   ))
-)))
+              box(width = 3, title = "Parameters",
+                  solidHeader = TRUE, status = "primary",
+                  sliderInput(inputId = "pop",
+                              label = "Patient Population",
+                              value = 100000, min = 50000, max = 500000),
+                  sliderInput(inputId = "rate",
+                              label = "Readmission Rate",
+                              value = 0.10, min = 0.0, max = 0.15,step = 0.01),
+                  sliderInput(inputId = "tpr",
+                              label = "True Positive Rate",
+                              value = 0.60, min = 0.0, max = 1.00, step = 0.02),
+                  sliderInput(inputId = "fpr",
+                              label = "False Positive Rate",
+                              value = 0.16, min = 0.0, ma = 1.00, step = 0.02)
+                  
+                ),
+              box(width = 8, title = "Cost Modeling and Finances",
+                  uiOutput('costfx'),
+                  helpText("Simplified Equation"),
+                  p(withMathJax("$$Total Savings = (RC * TP * RP) - DMC * (TP + FP)$$")),
+                  strong("Variables:"),
+                  p("TP = True Positive Count"),
+                  p("FP = False Positive Count"),
+                  p("RC = Cost of Readmission/Patient"),
+                  p("DMC = Cost of Diabetes Management Care/Patient"),
+                  p("RP = Readmissions % Prevented"))
+            ),
+    
+            fluidRow(
+              box(width = 12, title = "Description of Total Savings Equation",
+                  solidHeader = TRUE, status = "primary",
+                  p("With a strong prediction model in hand, it was necessary to determine how much a diabetes
+                    management (DM) program could save health service payers (i.e. a private insurer, public health
+                    insurance such as Medicare or Medicaid, or the individual if they lack coverage). Many of the
+                    numbers used to project these savings were estimates derived through literature review. Actual
+                    values likely vary depending on a number of factors such as geography, and underlying differences
+                    across patient populations and medical staff."),
+                  p("A Shiny web application that enables the imputation of a range of values for these metrics
+                    accounts for this variation. This application enables customized financial predictions tailored
+                    meet the nuanced situations within various different health care scenarios. However specific
+                    values were selected for the purposes of presentation."))
+              ),
+    
+            fluidRow(
+              box(width = 12, title = "Savings on Readmissions",
+                  solidHeader = TRUE, status = "primary",
+                  p("The expense per readmission is quite high for the healthcare payer. Based on literature review,
+                    it was estimated that the average cost per day of hospital care fluctuates around $10,000. Based
+                    on the population within the dataset, the average length of a hospital stay was calculated to be
+                    at 4.5 days. Therefore the estimated savings for each prevented readmission was calculated to be
+                    approximately $45,000."),
+                  p("Just because an at-risk individual receives a DM program, it is not guaranteed that a
+                    readmission will be avoided. Even with perfect execution, it is possible that a comorbidity,
+                    such as heart or liver disease, or any number of external factors may still result in a readmission.
+                    The estimated success rate of the diabetes management program hovered around 39%."),
+                  p("Therefore the savings from readmissions is calculated to be a from the product of:"),
+                  p("- the per patient cost of readmission "),
+                  p("- the number of true positives identified and enrolled within a DM program"),
+                  p("- the success rate of a DM program at preventing a readmission"))
+              ),
+    
+            fluidRow(
+              box(width = 12, title = "Expense of Diabetes Management Program",
+                  solidHeader = TRUE, status = "primary",
+              p("Implementing the DM program requires an upfront expenditure on the part of the healthcare payer.
+                This expenditure is subtracted from the savings produced through reduced readmissions. The cost of
+                the DM program is based on the time of the physician, discharge nurse, and home visiting nurse, and
+                was estimated to be $500 per patient based on literature review. "),
+              p("However, not every readmission predicted through the model is accurate. A number of false positives
+                are also identified, and are still enrolled within the DM program. The upfront expenditure for the plan
+                must be applied to both the true, and false positive predictions of the model."),
+              p("Therefore expenditure from implementing DM program is determined by the product of:"),
+              p("- the cost of the DM program per enrolled patient"),
+              p("- the sum of both the true and false positives"),
+              p("Through variations of this basic equation, a number of other performance metrics relevant to the success
+                of the DM program may also be derived. Our Shiny application allows for the easy calculation of all of these
+                related metrics, based on the input parameters selected by the user. Examples of these additional
+                performance metrics include:"),
+              p("- the number of readmissions prevented "),
+              p("- the percentage reduction in readmissions"),
+              p("- the average savings realized from each diabetes patient"))
+              )
+            )
+    )
+)
+)
