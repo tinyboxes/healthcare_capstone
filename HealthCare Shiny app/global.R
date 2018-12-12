@@ -1,11 +1,13 @@
 library(shiny)
-library(tidyverse)
+#library(tidyverse)
 library(shinydashboard)
 library(DT)
 library(plotly)
 library(pROC)
 library(caret)
-
+library(ggplot2)
+library(dplyr)
+library(e1071)
 
 df<- read.csv(file = "./DiabetesTrainTestForShiny.csv",stringsAsFactors = FALSE)
 feat_imp = read.csv(file = "./feat_imp.csv",stringsAsFactors = F) #Feature Importance
