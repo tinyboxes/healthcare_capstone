@@ -31,7 +31,7 @@ dashboardPage(
   ##Creating The Body of the Page
   dashboardBody(tabItems( ##Establishing That I want to work on the tab items
     tabItem("about", ##Calling the tab I wish to work on
-            box(h1('Predicting Hospital Readmission',align='center'),background='purple',width=24),
+            box(h1('Predicting Hospital Readmission For Diabetes Patients',align='center'),background='purple',width=24),
             box(background='light-blue', width=24,
                 h3('About the Company'),
                 p('Argos Health maximizes claim reimbursement for hospitals, 
@@ -97,38 +97,60 @@ dashboardPage(
             tabBox(id = "edatabs",width = 12,
                    tabPanel(title = "Outcome",
                             fluidRow(box(width = 12,
-                                         plotlyOutput("outcome")
+                                         plotlyOutput("outcome"),
+                                         strong('Overall Readmission Rate = 11.346%')
                             ))),
                    
                    tabPanel(title = "A1C level",
-                            fluidRow(box(width = 12,
-                                         plotlyOutput("A1C")
-                            ))),
+                            fluidRow(box(width = 6,
+                                         plotlyOutput("A1C1")
+                            ),
+                            box(width = 6,
+                                plotlyOutput("A1C2")
+                            )
+                            )),
                    
                    tabPanel(title = "Diagnoses",
-                            fluidRow(box(width = 12,
-                                         plotlyOutput("diagnoses")
-                            ))),
+                            fluidRow(box(width = 6,
+                                        plotlyOutput("diagnoses1")
+                            ),
+                            
+                            box(width = 6,
+                                        plotlyOutput("diagnoses2")
+                            )
+                            )),
                    
                    tabPanel(title = "Days in hospital",
-                            fluidRow(box(width = 12,
-                            plotlyOutput("days_hospital_hist")
-                            ))),
+                            fluidRow(box(width = 6,
+                            plotlyOutput("days_hospital_hist1")
+                            ),
+                            box(width=6,
+                                plotlyOutput("days_hospital_hist2"))
+                            )),
                    
                    tabPanel(title = "Num of labs",
-                            fluidRow(box(width = 12,
-                              plotlyOutput("num_lab_hist")
-                            ))),
+                            fluidRow(box(width = 6,
+                              plotlyOutput("num_lab_hist1")
+                            ),
+                            box(width = 6,
+                                plotlyOutput("num_lab_hist2"))
+                            )),
                    
                    tabPanel(title = "Num of meds",
-                            fluidRow(box(width = 12,
-                              plotlyOutput("num_meds_hist")
-                            ))),
+                            fluidRow(box(width = 6,
+                              plotlyOutput("num_meds_hist1")
+                            ),
+                            box(width = 6,
+                                plotlyOutput("num_meds_hist2"))
+                            )),
                    
                    tabPanel(title = "Age Groups",
-                            fluidRow(box(width = 12,
-                                         plotlyOutput("age_hist")
-                                         ))),
+                            fluidRow(box(width = 6,
+                                         plotlyOutput("age_hist1")
+                                         ),
+                                     box(width= 6,
+                                         plotlyOutput("age_hist2"))
+                                     )),
                    
                    tabPanel(title = "Metfomin&Insulin",
                             fluidRow(box(width = 6,
@@ -139,9 +161,12 @@ dashboardPage(
                                      ))),
                    
                    tabPanel(title = "Race",
-                            fluidRow(box(width = 12,
-                                         plotlyOutput("race_hist")
-                                         )))
+                            fluidRow(box(width = 6,
+                                         plotlyOutput("race_hist1")
+                                         ),
+                                     box(width = 6,
+                                         plotlyOutput("race_hist2"))
+                                     ))
             )),
     
     tabItem("results",
@@ -240,7 +265,7 @@ dashboardPage(
                                                          textOutput("d_r"),
                                                          h4("Gender:"),
                                                          textOutput("d_g")),
-                                                tabPanel(title = "Adinistrative Information",
+                                                tabPanel(title = "Administrative Information",
                                                          h4("Admission Type:"),
                                                          textOutput("hi_at"),
                                                          h4("Admission Source:"),
@@ -258,7 +283,7 @@ dashboardPage(
                                                 tabPanel(title = "Diagnoses/Test Results",
                                                          h4("Primary Diagnosis:"),
                                                          textOutput("dt_pd"),
-                                                         h4("Additional Diagoses:"),
+                                                         h4("Additional Diagnoses:"),
                                                          textOutput("s_d"),
                                                          h4("A1C Results:"),
                                                          textOutput("dt_a1c"),
@@ -289,13 +314,17 @@ dashboardPage(
                   h4(textOutput('aveSavings')),
                   h4(textOutput('reduction')),
                   br(),
-                  h5("Simplified Cost Saving Equation:"),
-                  p(withMathJax("$$Total~Savings = (RC * TP * RP) - DMC * (TP + FP)$$")),
-                  h5("Variables:"),
-                  h6("TP = True Positive Count"),
-                  h6("FP = False Positive Count"),
-                  h6("RC = Cost of Readmission/Patient"),
-                  h6("DMC = Cost of Diabeted Management Care/Patient"))
+                  h4("Simplified Cost Saving Equation:"),
+                  p(withMathJax("\\begin{align}
+                                & Total~Savings = (RC * TP * RP) - DMC * (TP + FP)\\\\
+                                \\\\
+                                & Variables:\\\\
+                                & ~~TP = True~Positive~Count \\\\
+                                & ~~FP = False~Positive~Count \\\\
+                                & ~~RC = Cost~of~Readmission~Patient \\\\
+                                & ~~DMC = Cost~of~Diabeted~Management~Care/Patient \\\\
+                                & ~~RP = Percent~Readmissions~Prevented~by~Diabetes~Management~Program
+                                \\end{align}")))
             ),
             
             fluidRow(
