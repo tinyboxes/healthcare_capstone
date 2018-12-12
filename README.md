@@ -1,6 +1,8 @@
 # healthcare_capstone
 Capstone Project on Creating a Model to Predict Readmission Rates.
 
+Link to Shiny App: https://chaoran.shinyapps.io/HealthCare/
+
 Link to Flask zip: https://www.dropbox.com/s/y6b89xj0poqsnwa/flask.zip?dl=0
 
 How to use Flask:
