@@ -9,6 +9,6 @@ How to use Flask:
 3. cd to the directory of the flask file
 4. Run the following two commands:
 
-  export FLASK_APP=a.py
+			export FLASK_APP=a.py
   
-  flask run
+  		flask run
