@@ -115,7 +115,7 @@ outcome <- ggplotly(group_by(df_train, readmitted) %>%
   layout(margin=m)
 
 #graph for A1C  in EDA
-A1C <- ggplotly(group_by(df_train, A1Cresult, readmitted) %>%
+A1C1 <- ggplotly(group_by(df_train, A1Cresult, readmitted) %>%
                   summarise(count=n())%>%
                   ggplot(aes(x=A1Cresult,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
                 + theme(plot.subtitle = element_text(vjust = 1), plot.caption = element_text(vjust = 1)) 
@@ -123,48 +123,122 @@ A1C <- ggplotly(group_by(df_train, A1Cresult, readmitted) %>%
                 + scale_x_discrete(limits=c("Not Taken","Normal",">7",">8")))%>%
   layout(margin=m)
 
+A1C2 <-ggplotly(df_train %>%
+                  group_by(., A1Cresult) %>% ##Change group by
+                  summarise(., percentage = sum(readmitted == "Yes") / n() ) %>%
+                  ggplot(., aes(x = A1Cresult, y = percentage, fill = A1Cresult)) + geom_col() ##Change X and Fill
+                + theme(plot.subtitle = element_text(vjust = 1),
+                        plot.caption = element_text(vjust = 1))
+                + labs(title = "A1C Result vs. Proportion of Readmittance", ##Change everything before "vs."
+                       x = "A1C Result", ##Change X
+                       y = "Percentage of Readmittance",
+                       fill = "A1Cresult")
+                       + scale_x_discrete(limits=c("Not Taken","Normal",">7",">8")))%>% ##Change Fill
+  layout(margin=m)
+
 #graph for diagnoses  in EDA
-diagnoses <- ggplotly(group_by(df_train, number_diagnoses, readmitted) %>%
+diagnoses1 <- ggplotly(group_by(df_train, number_diagnoses, readmitted) %>%
                         summarise(count=n()) %>%
-                        filter(.,number_diagnoses < 10) %>%
+                        #filter(.,number_diagnoses < 10) %>%
                         ggplot(aes(x=number_diagnoses,y=count,fill=readmitted))
                       +geom_bar(stat="identity",position='dodge') 
-                      + scale_x_continuous(breaks = seq(1,10,by = 1)) 
+                      + scale_x_continuous(breaks = seq(1,16,by = 1)) 
                       + theme(plot.subtitle = element_text(vjust = 1), plot.caption = element_text(vjust = 1)) 
                       +labs(title = "Number of Patients Based Vs. Number of Diagnoses", x = "Number of Diagnoses", y = "Number of Patients"))%>%
   layout(margin=m)
 
+diagnoses2 <- ggplotly(df_train %>%
+           group_by(., number_diagnoses) %>% ##Change group by
+           summarise(., percentage = sum(readmitted == "Yes") / n() ) %>%
+           ggplot(., aes(x = number_diagnoses, y = percentage, fill = number_diagnoses)) + geom_col() ##Change X and Fill
+         + theme(plot.subtitle = element_text(vjust = 1),
+                 plot.caption = element_text(vjust = 1))
+         + labs(title = "Number of Diagnoses vs. Proportion of Readmittance", ##Change everything before "vs."
+                x = "Number of Diagnoses", ##Change X
+                y = "Percentage of Readmittance",
+                fill = "number_diagnoses"))%>% ##Change Fill
+  layout(margin=m)
+
+
+
 #graph for days in hospital  in EDA
-days_hospital<- ggplotly(group_by(df_train,time_in_hospital,readmitted)%>%
+days_hospital1 <- ggplotly(group_by(df_train,time_in_hospital,readmitted)%>%
                            summarise(count=n())%>%
                            ggplot(aes(x=time_in_hospital,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
                          + theme(plot.subtitle = element_text(vjust = 1), plot.caption = element_text(vjust = 1)) 
                          +labs(title = "Number of Patients Vs. Days Spent in Hospital", x = "Time in Hospital (# Days)", y = "Number of Patients"))%>%
   layout(margin=m)
 
+days_hospital2 <- ggplotly(df_train %>%
+           group_by(., time_in_hospital) %>% ##Change group by
+           summarise(., percentage = sum(readmitted == "Yes") / n()) %>%
+           ggplot(., aes(x = time_in_hospital, y = percentage, fill = time_in_hospital)) + geom_col() ##Change X and Fill
+         + theme(plot.subtitle = element_text(vjust = 1),
+                 plot.caption = element_text(vjust = 1))
+         + labs(title = "Days in Hospital vs. Proportion of Readmittance", ##Change everything before "vs."
+                x = "Days in Hospital", ##Change X
+                y = "Percentage of Readmittance",
+                fill = "time_in_hospital"))%>% ##Change Fill
+  layout(margin=m)
+
 #graph for number of labs in EDA
-num_lab<-ggplotly(group_by(df_train,num_lab_procedures,readmitted)%>%
+num_lab1<-ggplotly(group_by(df_train,num_lab_procedures,readmitted)%>%
                     summarise(count=n())%>%
                     ggplot(aes(x=num_lab_procedures,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
                   + theme(plot.subtitle = element_text(vjust = 1), plot.caption = element_text(vjust = 1)) 
                   +labs(title = "Number of Patients Vs. Number of Lab Procedures",x = "Number of Lab Procedures", y = "Number of Patients"))%>%
   layout(margin=m)
 
+num_lab2 <- ggplotly(df_train %>%
+                       group_by(., num_lab_procedures) %>% ##Change group by
+                       summarise(., percentage = sum(readmitted == "Yes") / n()) %>%
+                       ggplot(., aes(x = num_lab_procedures, y = percentage, fill = num_lab_procedures)) + geom_col() ##Change X and Fill
+                     + theme(plot.subtitle = element_text(vjust = 1),
+                             plot.caption = element_text(vjust = 1))
+                     + labs(title = "Num Lab Procedures vs. Proportion of Readmittance", ##Change everything before "vs."
+                            x = "Num of Lab Procedures", ##Change X
+                            y = "Percentage of Readmittance",
+                            fill = "num_lab_procedures"))%>% ##Change Fill
+  layout(margin=m)
+
 
 #graph for number of medications in EDA
-num_meds<-ggplotly(group_by(df_train,num_medications,readmitted)%>%
+num_meds1<-ggplotly(group_by(df_train,num_medications,readmitted)%>%
                      summarise(count=n())%>%
                      ggplot(aes(x=num_medications,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
                    + theme(plot.subtitle = element_text(vjust = 1), plot.caption = element_text(vjust = 1)) 
                    +labs(title = "Number of Patients Vs. Number of Medications", x = "Number of Medications", y = "Number of Patients"))%>%
   layout(margin=m)
 
+num_meds2 <- ggplotly(df_train %>%
+                        group_by(., num_medications) %>% ##Change group by
+                        summarise(., percentage = sum(readmitted == "Yes") / n()) %>%
+                        ggplot(., aes(x = num_medications, y = percentage, fill = num_medications)) + geom_col() ##Change X and Fill
+                      + theme(plot.subtitle = element_text(vjust = 1),
+                              plot.caption = element_text(vjust = 1))
+                      + labs(title = "Num of Medications vs. Proportion of Readmittance", ##Change everything before "vs."
+                             x = "Num of Medications", ##Change X
+                             y = "Percentage of Readmittance",
+                             fill = "num_medications"))%>% ##Change Fill
+  layout(margin=m)
+
 #graph for age in EDA
-age<-ggplotly(group_by(df_train,age,readmitted)%>%
+age1<-ggplotly(group_by(df_train,age,readmitted)%>%
                 summarise(count=n())%>%
                 ggplot(aes(x=age,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
               + theme(plot.subtitle = element_text(vjust = 1),  plot.caption = element_text(vjust = 1)) 
               +labs(title = "Number of Patients Vs. Age Bracket", x = "Age Bracket", y = "Number of Patients"))%>%
+  layout(margin=m)
+age2 <- ggplotly(df_train %>%
+                   group_by(., age) %>% ##Change group by
+                   summarise(., percentage = sum(readmitted == "Yes") / n()) %>%
+                   ggplot(., aes(x = age, y = percentage, fill = age)) + geom_col() ##Change X and Fill
+                 + theme(plot.subtitle = element_text(vjust = 1),
+                         plot.caption = element_text(vjust = 1))
+                 + labs(title = "Age Bracket vs. Proportion of Readmittance", ##Change everything before "vs."
+                        x = "Age Bracket", ##Change X
+                        y = "Percentage of Readmittance",
+                        fill = "age"))%>% ##Change Fill
   layout(margin=m)
 
 #graph for Metformin in EDA
@@ -186,11 +260,22 @@ insulin<-ggplotly(group_by(df_train,med_insulin,readmitted)%>%
   layout(margin=m)
 
 #graph for race in EDA
-race<-ggplotly(group_by(df_train,race,readmitted)%>%
+race1<-ggplotly(group_by(df_train,race,readmitted)%>%
                  summarise(count=n())%>%
                  ggplot(aes(x=race,y=count,fill=readmitted))+geom_bar(stat="identity",position='dodge') 
                + theme(plot.subtitle = element_text(vjust = 1),plot.caption = element_text(vjust = 1)) 
                +labs(title = "Number of Patients Vs. Race",x = "Race", y = "Number of Patients"))%>%
+  layout(margin=m)
+race2 <- ggplotly(df_train %>%
+           group_by(., race) %>% ##Change group by
+           summarise(., percentage = sum(readmitted == "Yes") / n()) %>%
+           ggplot(., aes(x = race, y = percentage, fill = race)) + geom_col() ##Change X and Fill
+         + theme(plot.subtitle = element_text(vjust = 1),
+                 plot.caption = element_text(vjust = 1))
+         + labs(title = "Race vs. Proportion of Readmittance", ##Change everything before "vs."
+                x = "Race", ##Change X
+                y = "Percentage of Readmittance",
+                fill = "race"))%>% ##Change Fill
   layout(margin=m)
 ### End of EDA tab code ###
 

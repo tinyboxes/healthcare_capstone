@@ -103,45 +103,59 @@ shinyServer(function(input, output) {
   output$s_d = renderText({
     s.d.vector()
   })
-  
-  #days in hospital-EDA  
-  output$days_hospital_hist<- renderPlot({
-    days_hospital
-  })
-  
+
   #outcome-EDA  
   output$outcome<- renderPlotly({
     outcome
   })
-  
+    
   #A1C-EDA 
-  output$A1C<- renderPlotly({
-    A1C
+  output$A1C1<- renderPlotly({
+    A1C1
+  })
+  output$A1C2<- renderPlotly({
+    A1C2
   })
   
   #diagnoses-EDA
-  output$diagnoses<- renderPlotly({
-    diagnoses
+  output$diagnoses1<- renderPlotly({
+    diagnoses1
   })
-
+  output$diagnoses2<- renderPlotly({
+    diagnoses2
+  })
+  
+  
   #days in hospital-EDA  
-  output$days_hospital_hist<- renderPlotly({
-    days_hospital
+  output$days_hospital_hist1<- renderPlotly({
+    days_hospital1
+  })
+  output$days_hospital_hist2<- renderPlotly({
+    days_hospital2
   })
   
   # num of lab-EDA
-  output$num_lab_hist<- renderPlotly({
-    num_lab
+  output$num_lab_hist1<- renderPlotly({
+    num_lab1
+  })
+  output$num_lab_hist2<- renderPlotly({
+    num_lab2
   })
   
-  # num of lab-EDA
-  output$num_meds_hist<- renderPlotly({
-    num_meds
+  # num of meds
+  output$num_meds_hist1<- renderPlotly({
+    num_meds1
+  })
+  output$num_meds_hist2<- renderPlotly({
+    num_meds2
   })
   
   # age-EDA
-  output$age_hist<- renderPlotly({
-    age
+  output$age_hist1<- renderPlotly({
+    age1
+  })
+  output$age_hist2<- renderPlotly({
+    age2
   })
   
   #metformin-EDA
@@ -155,8 +169,11 @@ shinyServer(function(input, output) {
   })
   
   #race-EDA
-  output$race_hist<- renderPlotly({
-    race
+  output$race_hist1<- renderPlotly({
+    race1
+  })
+  output$race_hist2<- renderPlotly({
+    race2
   })
   
 ### aucplot + confusion matrix start ###
