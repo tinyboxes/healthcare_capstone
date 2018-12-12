@@ -12,3 +12,5 @@ How to use Flask:
 		export FLASK_APP=a.py
   
   		flask run
+
+Test file: https://www.dropbox.com/s/gzmi0wni6h6d414/test_multi.csv?dl=0
